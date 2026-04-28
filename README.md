@@ -76,6 +76,7 @@ For more useful documentation about Anylinux-AppImages, see the pages below:
 [CollaboraOffice](https://github.com/pkgforge-dev/CollaboraOffice-AppImage)                                              |
 [Collision](https://github.com/pkgforge-dev/Collision-AppImage)                                                          |
 [Commander-Genius](https://github.com/pkgforge-dev/Commander-Genius-AppImage)                                            |
+[Contour](https://github.com/pkgforge-dev/contour-AppImage)                                                              |
 [CopyQ](https://github.com/pkgforge-dev/CopyQ-AppImage)                                                                  |
 [CorsixTH](https://github.com/pkgforge-dev/CorsixTH-AppImage)                                                            |
 [Crispy Doom](https://github.com/pkgforge-dev/Crispy-Doom-AppImage)                                                      |
