@@ -64,6 +64,8 @@ For more useful documentation about Anylinux-AppImages, see the pages below:
 | [BigPEmu](https://github.com/pkgforge-dev/BigPEmu-AppImage) |
 | [Bitwarden](https://github.com/pkgforge-dev/Bitwarden-AppImage-Enhanced) |
 | [Blender](https://github.com/pkgforge-dev/Blender-AppImage) |
+| [BM64Recomp](https://github.com/pkgforge-dev/BM64Recomp-AppImage-Enhanced) |
+| [BMHeroRecomp](https://github.com/pkgforge-dev/BMHeroRecomp-AppImage-Enhanced) |
 | [Bulky](https://github.com/pkgforge-dev/Bulky-AppImage) |
 | [Cannonball](https://github.com/pkgforge-dev/Cannonball-AppImage) |
 | [Cartridges](https://github.com/pkgforge-dev/Cartridges-AppImage) |
@@ -205,6 +207,7 @@ For more useful documentation about Anylinux-AppImages, see the pages below:
 | [MarioKart64Recomp](https://github.com/pkgforge-dev/MarioKart64Recomp-AppImage) |
 | [Media Downloader](https://github.com/pkgforge-dev/Media-Downloader-AppImage) |
 | [Mednafen](https://github.com/pkgforge-dev/mednafen-appimage) |
+| [MegaMan64Recomp](https://github.com/pkgforge-dev/MegaMan64Recomp-AppImage) |
 | [melonDS](https://github.com/pkgforge-dev/melonDS-AppImage-Enhanced) |
 | [MESA](https://github.com/pkgforge-dev/MESA-AppImage) |
 | [mGBA](https://github.com/pkgforge-dev/mGBA-AppImage-Enhanced) |
@@ -226,6 +229,7 @@ For more useful documentation about Anylinux-AppImages, see the pages below:
 | [Odamex](https://github.com/pkgforge-dev/Odamex-AppImage) |
 | [Obsidian](https://github.com/pkgforge-dev/Obsidian-AppImage-Enhanced) |
 | [okteta](https://github.com/pkgforge-dev/okteta-AppImage) |
+| [OpenBoardView](https://github.com/pkgforge-dev/OpenBoardView-AppImage) |
 | [OpenClaw](https://github.com/pkgforge-dev/OpenClaw-AppImage) |
 | [opencode](https://github.com/pkgforge-dev/opencode-AppImage-Enhanced) |
 | [OpenJazz](https://github.com/pkgforge-dev/OpenJazz-AppImage) |
