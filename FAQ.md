@@ -48,7 +48,14 @@ DwarFS is a lot faster than SquashFS while being smaller at the same time.
 <img width="631" height="257" alt="Screenshot_2026-04-27_02-09-36" src="https://github.com/user-attachments/assets/4b1096f8-95a2-443d-a9bd-5f0fa7dcffbe" />
 
 ---
-DwarFS also offers PGO like optimizations, [which allows us to make small appimages that start instantly.](https://github.com/pkgforge-dev/CollaboraOffice-AppImage/pull/1) 
+DwarFS also offers PGO like optimizations, [which allows us to make small appimages that start instantly.](https://github.com/pkgforge-dev/CollaboraOffice-AppImage/pull/1)
+
+# AppImage has no thumbnail?
+
+Because we use DwarFS instead of SquashFS, you need an AppImage thumbnailer that supports DwarFS:
+
+* [appimage-thumbnailer](https://github.com/kem-a/appimage-thumbnailer)
+* [simple-appimage-thumbnailer](https://github.com/Samueru-sama/simple-appimage-thumbnailer)
 
 # Why bundle glibc instead of musl?
 
