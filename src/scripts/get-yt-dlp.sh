@@ -10,19 +10,18 @@ _yt_dlp_message="${APPIMAGE##*/} needs yt-dlp to play online videos, but yt-dlp 
 
 _get_ytdlp() {
 	mkdir -p "$BINDIR"
-	_ytdlp_link=$(download - https://api.github.com/repos/pkgforge-dev/yt-dlp-AppImage/releases \
-	  | sed 's/[()",{} ]/\n/g' | grep -oi "https.*$APPIMAGE_ARCH.*AppImage$" | head -1)
-	>&2 echo "Downloading '$_ytdlp_link'..."
+	_ytdlp_link=$(download - https://api.github.com/repos/pkgforge-dev/yt-dlp-AppImage/releases |
+		sed 's/[()",{} ]/\n/g' | grep -oi "https.*$APPIMAGE_ARCH.*AppImage$" | head -1)
+	echo >&2 "Downloading '$_ytdlp_link'..."
 	download "$BINDIR"/yt-dlp "$_ytdlp_link"
 	chmod +x "$BINDIR"/yt-dlp
 }
-
 
 if ! command -v yt-dlp 1>/dev/null && [ ! -f "$_denyfile" ]; then
 	if notify -dq "$_yt_dlp_message"; then
 		_get_ytdlp || notify -de 'Something went wrong downloading yt-dlp'
 	else
 		mkdir -p "$CACHEDIR"
-		:> "$_denyfile"
+		: >"$_denyfile"
 	fi
 fi

@@ -14,20 +14,20 @@ export OUTPATH=./dist
 export OUTNAME=gtk3-demo-"$ARCH".AppImage
 
 pacman -Syu --noconfirm \
-	base-devel       \
-	curl             \
-	git              \
-	gtk3-demos       \
-	libxcb           \
-	libxcursor       \
-	libxi            \
-	libxkbcommon     \
+	base-devel \
+	curl \
+	git \
+	gtk3-demos \
+	libxcb \
+	libxcursor \
+	libxi \
+	libxkbcommon \
 	libxkbcommon-x11 \
-	libxrandr        \
-	libxtst          \
-	mesa-utils       \
-	vulkan-tools     \
-	wget             \
+	libxrandr \
+	libxtst \
+	mesa-utils \
+	vulkan-tools \
+	wget \
 	xorg-server-xvfb \
 	zsync
 
@@ -47,4 +47,3 @@ chmod +x ./quick-sharun
 
 # test the final app
 ./quick-sharun --test ./dist/*.AppImage
-

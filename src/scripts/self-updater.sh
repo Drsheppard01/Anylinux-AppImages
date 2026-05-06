@@ -3,8 +3,10 @@ set -e
 # Helper script in POSIX shell to self update appimages in place
 # depends on appimageupdatetool which will be downloaded if not available
 
-
-_desktop_entry=$(set -- "$APPDIR"/*.desktop; echo "${1##*/}")
+_desktop_entry=$(
+	set -- "$APPDIR"/*.desktop
+	echo "${1##*/}"
+)
 _desktop_entry=${_desktop_entry%.desktop}
 _updater_policy_dir=${UPDATE_POLICY_CONFIGDIR:-$HOST_XDG_CONFIG_HOME/auto-updates-policy}
 _updater_policy_file=${_updater_policy_dir}/${_desktop_entry}-update-setting
@@ -14,8 +16,8 @@ APPIMAGEUPDATETOOL_LINK=${APPIMAGEUPDATETOOL_LINK:-https://github.com/AppImageCo
 
 # make sure we can update the thing
 _updater_sanity_check() {
-	if [ -f "$_updater_policy_dir"/no_updatecheck ] \
-	  || [ -f "$HOST_XDG_DATA_HOME"/appimagekit/no_updatecheck ]; then
+	if [ -f "$_updater_policy_dir"/no_updatecheck ] ||
+		[ -f "$HOST_XDG_DATA_HOME"/appimagekit/no_updatecheck ]; then
 		return 1
 	elif [ "$DISABLE_AUTO_UPDATES" = 1 ]; then
 		return 1
@@ -63,9 +65,18 @@ _check_for_update() {
 	set -e
 	# exit code >1 likely indicates the app was not correctly packaged
 	case "$r" in
-		0) >&2 echo " $_updater_appname is up to date"; return 1;;
-		1) >&2 echo " $_updater_appname update is available"; return 0;;
-		*) >&2 echo " $_updater_appname update check failed"; return 1;;
+	0)
+		echo >&2 " $_updater_appname is up to date"
+		return 1
+		;;
+	1)
+		echo >&2 " $_updater_appname update is available"
+		return 0
+		;;
+	*)
+		echo >&2 " $_updater_appname update check failed"
+		return 1
+		;;
 	esac
 }
 
@@ -84,7 +95,7 @@ _update() {
 
 _make_configfile() {
 	if [ ! -f "$_updater_policy_file" ]; then
-		echo "2" > "$_updater_policy_file"
+		echo "2" >"$_updater_policy_file"
 		# do not ask the first time we are launched
 		# because that just annoys people
 		return 1
@@ -93,29 +104,28 @@ _make_configfile() {
 
 _enable_update_checking() {
 	if notify -dq "Allow $_updater_appname to check for updates?"; then
-		echo "1" > "$_updater_policy_file"
+		echo "1" >"$_updater_policy_file"
 	else
 		# disable without asking
-		echo "0" > "$_updater_policy_file"
+		echo "0" >"$_updater_policy_file"
 	fi
 }
 
 _disable_update_checking() {
 	if notify -dq "Do you wish to disable update checks and not see this message again?"; then
-		echo "0" > "$_updater_policy_file"
+		echo "0" >"$_updater_policy_file"
 	fi
 }
-
 
 run_updater() {
 	export PATH="$PATH:$BINDIR"
 	_updater_sanity_check
 	_make_configfile
 
-	read -r _status < "$_updater_policy_file"
+	read -r _status <"$_updater_policy_file"
 
 	if [ "$_status" = 0 ]; then
-		>&2 echo "self updates disabled by $_updater_policy_file"
+		echo >&2 "self updates disabled by $_updater_policy_file"
 		return 0
 	elif [ "$_status" = 1 ]; then
 		_get_appimageupdatetool || _disable_update_checking
@@ -127,6 +137,5 @@ run_updater() {
 		_enable_update_checking
 	fi
 }
-
 
 run_updater &

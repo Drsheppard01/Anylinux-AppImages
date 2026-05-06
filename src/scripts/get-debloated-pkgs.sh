@@ -40,49 +40,49 @@ _echo2() {
 	printf "$YELLOW%s$RESET\n" "$*"
 }
 
-_error(){
+_error() {
 	if [ -f "$ERRLOG" ]; then
-		>&2 cat "$ERRLOG"
+		cat >&2 "$ERRLOG"
 	fi
-	>&2 printf '\033[1;31m%s\033[0m\n' "ERROR: $*"
+	printf >&2 '\033[1;31m%s\033[0m\n' "ERROR: $*"
 	exit 1
 }
 
 _help_msg() {
 	cat <<-EOF
-	Usage: ${0##*/} [OPTIONS] [package names here]
+		Usage: ${0##*/} [OPTIONS] [package names here]
 
-	Downloads and install Arch Linux packages from:
-	$SOURCE
+		Downloads and install Arch Linux packages from:
+		$SOURCE
 
-	Options:
-	--help         Show this message and exit
-	--add-common   Install a curated set of common packages, implies --add-mesa
-	--add-opengl   Include Mesa OpenGL package
-	--add-vulkan   Include Mesa Vulkan drivers
-	            x86_64:  vulkan-{intel,radeon,nouveau}
-	            aarch64: vulkan-{freedreno,panfrost,broadcom,asahi,radeon,nouveau}
-	--add-mesa     Include all of mesa, implies --add-opengl and --add-vulkan
-	--prefer-nano  Prefer 'nano' variants of packages instead of 'mini'
+		Options:
+		--help         Show this message and exit
+		--add-common   Install a curated set of common packages, implies --add-mesa
+		--add-opengl   Include Mesa OpenGL package
+		--add-vulkan   Include Mesa Vulkan drivers
+		            x86_64:  vulkan-{intel,radeon,nouveau}
+		            aarch64: vulkan-{freedreno,panfrost,broadcom,asahi,radeon,nouveau}
+		--add-mesa     Include all of mesa, implies --add-opengl and --add-vulkan
+		--prefer-nano  Prefer 'nano' variants of packages instead of 'mini'
 
-	Environment variables:
-	SOURCE           Change the source of the packages
-	COMMON_PACKAGES  Set to 1 to enable --add-common behavior
-	PREFER_NANO      Set to 1 to prefer 'nano' packages
-	ADD_MESA         Set to 1 to enable --add-mesa behavior
-	ADD_OPENGL       Set to 1 to add OpenGL package
-	ADD_VULKAN       Set to 1 to add Vulkan packages
+		Environment variables:
+		SOURCE           Change the source of the packages
+		COMMON_PACKAGES  Set to 1 to enable --add-common behavior
+		PREFER_NANO      Set to 1 to prefer 'nano' packages
+		ADD_MESA         Set to 1 to enable --add-mesa behavior
+		ADD_OPENGL       Set to 1 to add OpenGL package
+		ADD_VULKAN       Set to 1 to add Vulkan packages
 
-	Examples:
-	${0##*/} --add-common
-	${0##*/} --add-vulkan
-	${0##*/} --add-common --prefer-nano
-	${0##*/} --add-vulkan mangohud
-	${0##*/} --add-opengl intel-media-driver
-	${0##*/} ffmpeg-mini qt6-base-mini
+		Examples:
+		${0##*/} --add-common
+		${0##*/} --add-vulkan
+		${0##*/} --add-common --prefer-nano
+		${0##*/} --add-vulkan mangohud
+		${0##*/} --add-opengl intel-media-driver
+		${0##*/} ffmpeg-mini qt6-base-mini
 
-	NOTE:
-	- Requires either 'wget' or 'curl'
+		NOTE:
+		- Requires either 'wget' or 'curl'
 	EOF
 	exit 1
 }
@@ -93,7 +93,7 @@ _download() {
 		if $DLCMD "$@" 2>>"$ERRLOG"; then
 			break
 		fi
-		COUNT=$(( COUNT + 1 ))
+		COUNT=$((COUNT + 1))
 		if [ "$COUNT" -eq 4 ] && grep -q 'ERROR 403' "$ERRLOG"; then
 			_echo2 "WARNING: Rate limit exceeded!"
 			_echo2 "Waiting 10 minutes before retrying..."
@@ -116,34 +116,34 @@ fi
 
 # use wget-curl wrapper if GITHUB_TOKEN is set
 if [ -n "$GITHUB_TOKEN" ]; then
-	cat <<-'EOF' > "$TMPDIR"/.wget-curl-wrapper.sh
-	#!/bin/sh
-	# wrapper for wget and curl that automatically uses GITHUB_TOKEN
-	for link do
-	    case "$link" in
-	        *github.com*) GITHUB_LINK=1; break;;
-	    esac
-	done
+	cat <<-'EOF' >"$TMPDIR"/.wget-curl-wrapper.sh
+		#!/bin/sh
+		# wrapper for wget and curl that automatically uses GITHUB_TOKEN
+		for link do
+		    case "$link" in
+		        *github.com*) GITHUB_LINK=1; break;;
+		    esac
+		done
 
-	if command -v wget 1>/dev/null; then
-	    set -- --retry-connrefused --tries=30 -O "$@"
-	    if [ "$GITHUB_LINK" = 1 ] && [ -n "$GITHUB_TOKEN" ]; then
-	        set -- \
-	            --header="Authorization: Bearer $GITHUB_TOKEN" \
-	            --header="Accept: application/vnd.github+json" \
-	            "$@"
-	    fi
-	    exec wget "$@"
-	elif command -v curl 1>/dev/null; then
-	    set -- --retry-connrefused --retry 30 -Lo "$@"
-	    if [ "$GITHUB_LINK" = 1 ] && [ -n "$GITHUB_TOKEN" ]; then
-	    set -- \
-	            --header "Authorization: Bearer $GITHUB_TOKEN" \
-	            --header "Accept: application/vnd.github+json" \
-	            "$@"
-	    fi
-	    exec curl "$@"
-	fi
+		if command -v wget 1>/dev/null; then
+		    set -- --retry-connrefused --tries=30 -O "$@"
+		    if [ "$GITHUB_LINK" = 1 ] && [ -n "$GITHUB_TOKEN" ]; then
+		        set -- \
+		            --header="Authorization: Bearer $GITHUB_TOKEN" \
+		            --header="Accept: application/vnd.github+json" \
+		            "$@"
+		    fi
+		    exec wget "$@"
+		elif command -v curl 1>/dev/null; then
+		    set -- --retry-connrefused --retry 30 -Lo "$@"
+		    if [ "$GITHUB_LINK" = 1 ] && [ -n "$GITHUB_TOKEN" ]; then
+		    set -- \
+		            --header "Authorization: Bearer $GITHUB_TOKEN" \
+		            --header "Accept: application/vnd.github+json" \
+		            "$@"
+		    fi
+		    exec curl "$@"
+		fi
 	EOF
 	chmod +x "$TMPDIR"/.wget-curl-wrapper.sh
 	DLCMD="$TMPDIR"/.wget-curl-wrapper.sh
@@ -151,12 +151,13 @@ if [ -n "$GITHUB_TOKEN" ]; then
 fi
 
 case "$ARCH" in
-	x86_64)  SUFFIX='x86_64.pkg.tar.zst'       ;;
-	aarch64) SUFFIX='aarch64.pkg.tar.xz'       ;;
-	''|*)    _error "Unsupported Arch: '$ARCH'";;
+x86_64) SUFFIX='x86_64.pkg.tar.zst' ;;
+aarch64) SUFFIX='aarch64.pkg.tar.xz' ;;
+'' | *) _error "Unsupported Arch: '$ARCH'" ;;
 esac
 
-while :; do case "$1" in
+while :; do
+	case "$1" in
 	--help)
 		_help_msg
 		;;
@@ -189,7 +190,7 @@ while :; do case "$1" in
 	!)
 		shift
 		case "$1" in
-			''|*-) _error "'!' requires a package to remove";;
+		'' | *-) _error "'!' requires a package to remove" ;;
 		esac
 		REMOVE_PACKAGES="$REMOVE_PACKAGES $1"
 		shift
@@ -201,7 +202,7 @@ while :; do case "$1" in
 	esac
 done
 
-if [ "$PREFER_NANO"  = 1 ]; then
+if [ "$PREFER_NANO" = 1 ]; then
 	PKG_TYPE=nano
 else
 	PKG_TYPE=mini
@@ -210,12 +211,12 @@ fi
 if [ "$COMMON_PACKAGES" = 1 ]; then
 	ADD_MESA=1
 	set -- "$@" \
-		icu-mini         \
-		opus-mini        \
-		libxml2-mini     \
-		qt6-base-mini    \
-		gtk3-mini        \
-		gtk4-mini        \
+		icu-mini \
+		opus-mini \
+		libxml2-mini \
+		qt6-base-mini \
+		gtk3-mini \
+		gtk4-mini \
 		gdk-pixbuf2-mini \
 		librsvg-mini
 fi
@@ -239,14 +240,14 @@ if [ "$ADD_VULKAN" = 1 ]; then
 		set -- "$@" vulkan-intel-"$PKG_TYPE"
 	elif [ "$ARCH" = 'aarch64' ]; then
 		set -- "$@" \
-			vulkan-panfrost-"$PKG_TYPE"  \
+			vulkan-panfrost-"$PKG_TYPE" \
 			vulkan-freedreno-"$PKG_TYPE" \
-			vulkan-broadcom-"$PKG_TYPE"  \
-			vulkan-asahi-"$PKG_TYPE"     \
+			vulkan-broadcom-"$PKG_TYPE" \
+			vulkan-asahi-"$PKG_TYPE" \
 			vulkan-powervr-"$PKG_TYPE"
 	fi
 	set -- "$@" \
-		vulkan-radeon-"$PKG_TYPE"  \
+		vulkan-radeon-"$PKG_TYPE" \
 		vulkan-nouveau-"$PKG_TYPE" \
 		vulkan-virtio-"$PKG_TYPE"
 fi
@@ -257,13 +258,13 @@ if [ -z "$1" ]; then
 	_help_msg
 elif [ -n "$REMOVE_PACKAGES" ]; then
 	FILTERED=""
-	for pkg do
+	for pkg; do
 		for del in $REMOVE_PACKAGES; do
 			case "$pkg" in
-				"$del"*)
-					_echo2 "Not adding $pkg"
-					continue 2
-					;;
+			"$del"*)
+				_echo2 "Not adding $pkg"
+				continue 2
+				;;
 			esac
 		done
 		FILTERED="$FILTERED $pkg"
@@ -271,15 +272,15 @@ elif [ -n "$REMOVE_PACKAGES" ]; then
 	set -- $FILTERED
 fi
 
-if ! LIST_ALL=$(_download - "$SOURCE" \
-	| sed 's/[()",{} ]/\n/g' | grep -o 'https.*pkg\.tar\.\(zst\|xz\)'); then
+if ! LIST_ALL=$(_download - "$SOURCE" |
+	sed 's/[()",{} ]/\n/g' | grep -o 'https.*pkg\.tar\.\(zst\|xz\)'); then
 	_error "Failed to download packages list!"
 fi
 
 LIST_ARCH=$(echo "$LIST_ALL" | grep "$SUFFIX")
 
-for pkg do
-	if ! echo "$LIST_ARCH" | grep -m 1 "$pkg" >> "$TMPFILE"; then
+for pkg; do
+	if ! echo "$LIST_ARCH" | grep -m 1 "$pkg" >>"$TMPFILE"; then
 		# maybe this package is only available for a certain arch
 		# in that case check before quitting with error
 		if echo "$LIST_ALL" | grep -m 1 "$pkg"; then
@@ -300,7 +301,7 @@ _echo "------------------------------------------------------------"
 _echo ""
 
 set -- $TO_DOWNLOAD
-for pkg do
+for pkg; do
 	_download "$TMPDIR"/"${pkg##*/}" "$pkg" &
 	pids="$pids $!"
 done

@@ -20,23 +20,23 @@ export OUTNAME=Qt6+dbus-demo-onlysoftware-"$ARCH".AppImage
 export ALWAYS_SOFTWARE=1
 
 pacman -Syu --noconfirm \
-	base-devel       \
-	curl             \
-	git              \
-	kvantum          \
-	libxcb           \
-	libxcursor       \
-	libxi            \
-	libxkbcommon     \
+	base-devel \
+	curl \
+	git \
+	kvantum \
+	libxcb \
+	libxcursor \
+	libxi \
+	libxkbcommon \
 	libxkbcommon-x11 \
-	libxrandr        \
-	libxtst          \
-	lxqt-qtplugin    \
-	mesa-utils       \
-	qt6ct            \
-	qt6-tools        \
-	vulkan-tools     \
-	wget             \
+	libxrandr \
+	libxtst \
+	lxqt-qtplugin \
+	mesa-utils \
+	qt6ct \
+	qt6-tools \
+	vulkan-tools \
+	wget \
 	xorg-server-xvfb \
 	zsync
 

@@ -35,9 +35,9 @@ _find_host_libjack() (
 				return 0
 			fi
 		done <<-EOF
-		/usr/lib/$APPIMAGE_ARCH-linux-gnu
-		/usr/lib64
-		/usr/lib
+			/usr/lib/$APPIMAGE_ARCH-linux-gnu
+			/usr/lib64
+			/usr/lib
 		EOF
 	else
 		return 0

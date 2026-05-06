@@ -64,15 +64,15 @@ PATH_MAPPING_SCRIPT="$APPDIR"/bin/01-path-mapping-hardcoded.src.hook
 if [ -f "$PATH_MAPPING_SCRIPT" ]; then
 	while IFS= read -r line; do
 		case "$line" in
-			_tmp_*) eval "$line";;
+		_tmp_*) eval "$line" ;;
 		esac
-	done < "$PATH_MAPPING_SCRIPT"
+	done <"$PATH_MAPPING_SCRIPT"
 fi
 
 regex='A-Za-z0-9_=-'
-_tmp_bin="${_tmp_bin:-$(tr -dc "$regex" < /dev/urandom | head -c 3)}"
-_tmp_lib="${_tmp_lib:-$(tr -dc "$regex" < /dev/urandom | head -c 3)}"
-_tmp_share="${_tmp_share:-$(tr -dc "$regex" < /dev/urandom | head -c 5)}"
+_tmp_bin="${_tmp_bin:-$(tr -dc "$regex" </dev/urandom | head -c 3)}"
+_tmp_lib="${_tmp_lib:-$(tr -dc "$regex" </dev/urandom | head -c 3)}"
+_tmp_share="${_tmp_share:-$(tr -dc "$regex" </dev/urandom | head -c 5)}"
 
 if [ "$DEPLOY_PYTHON" = 1 ]; then
 	DEPLOY_SYS_PYTHON=1
@@ -120,12 +120,12 @@ _echo() {
 	printf '\033[1;92m%s\033[0m\n' " $*"
 }
 
-_err_msg(){
-	>&2 printf '\033[1;31m%s\033[0m\n' " $*"
+_err_msg() {
+	printf >&2 '\033[1;31m%s\033[0m\n' " $*"
 }
 
 _is_cmd() {
-	for cmd do
+	for cmd; do
 		command -v "$cmd" 1>/dev/null || return 1
 	done
 	return 0
@@ -164,86 +164,86 @@ _download() {
 
 _help_msg() {
 	cat <<-EOF
-	  USAGE: ${0##*/} /path/to/binaries_and_libraries
+		  USAGE: ${0##*/} /path/to/binaries_and_libraries
 
-	  DESCRIPTION:
-	  POSIX shell script wrapper for sharun that simplifies the deployment
-	  of AppImages to simple oneliners. It automates detection and deployment of common
-	  libraries such as GTK, Qt, OpenGL, Vulkan, Pipewire, GStreamer, etc.
+		  DESCRIPTION:
+		  POSIX shell script wrapper for sharun that simplifies the deployment
+		  of AppImages to simple oneliners. It automates detection and deployment of common
+		  libraries such as GTK, Qt, OpenGL, Vulkan, Pipewire, GStreamer, etc.
 
-	  Features:
-	  - Automatic detection and forced deployment of libraries.
-	  - Support for environment-based configuration to force deployment, e.g., DEPLOY_OPENGL=1
-	  - Deployment of app-specific hooks, desktop entries, icons, locale data and more.
-	  - Automatic patching of hardcoded paths in binaries and libraries.
+		  Features:
+		  - Automatic detection and forced deployment of libraries.
+		  - Support for environment-based configuration to force deployment, e.g., DEPLOY_OPENGL=1
+		  - Deployment of app-specific hooks, desktop entries, icons, locale data and more.
+		  - Automatic patching of hardcoded paths in binaries and libraries.
 
-	  OPTIONS / ENVIRONMENT VARIABLES:
-	  ADD_HOOKS          List of hooks (colon-separated) to deploy with the application.
-	  DESKTOP            Path or URL to a .desktop file to include.
-	  ICON               Path or URL to an icon file to include.
-	  OUTPUT_APPIMAGE    Set to 1 to turn the deployed AppDir into an AppImage.
-	  DEPLOY_QT          Set to 1 to force deployment of Qt. Will determine to deploy
-	                 QtWebEngine and Qml as well, these can be controlled with
-	                 DEPLOY_QT_WEB_ENGINE and DEPLOY_QML. Set to 1 enable, 0 disable
-					 Set QT_DIR if the system Qt directory in LIB_DIR has a different name.
-	  DEPLOY_SDL          Set to 1 to force deployment of SDL.
-	  DEPLOY_GTK          Set to 1 to force deployment of GTK.
-	  DEPLOY_GDK          Set to 1 to force deployment of gdk-pixbuf.
-	  DEPLOY_GLYCIN       Set to 1 to force deployment of Glycin.
-	  DEPLOY_OPENGL       Set to 1 to force deployment of OpenGL.
-	  DEPLOY_VULKAN       Set to 1 to force deployment of Vulkan.
-	  DEPLOY_IMAGEMAGICK  Set to 1 to force deployment of ImageMagick.
-	  DEPLOY_LIBHEIF      Set to 1 to force deployment of libheif.
-	  DEPLOY_GEGL         Set to 1 to force deployment of GEGL.
-	  DEPLOY_BABL         Set to 1 to force deployment of babl.
-	  DEPLOY_P11KIT       Set to 1 to force deployment of p11-kit.
-	  DEPLOY_PIPEWIRE     Set to 1 to force deployment of Pipewire.
-	  DEPLOY_PULSE        Set to 1 to force deployment of pulseaudio.
-	  DEPLOY_GSTREAMER    Set to 1 to force deployment of GStreamer. By default
-	                several gstreamer plugins are removed, set DEPLOY_GSTREAMER_ALL=1
-	                if you can to deploy ALL Gstreamer plugins. (Very bloated).
-	  DEPLOY_LOCALE       Set to 1 to deploy locale data.
-	  DEPLOY_PYTHON   Set to 1 to deploy system Python. Will remove all pycache
-	                  files, set DEBLOAT_PYTHON to 0 to prevent this.
+		  OPTIONS / ENVIRONMENT VARIABLES:
+		  ADD_HOOKS          List of hooks (colon-separated) to deploy with the application.
+		  DESKTOP            Path or URL to a .desktop file to include.
+		  ICON               Path or URL to an icon file to include.
+		  OUTPUT_APPIMAGE    Set to 1 to turn the deployed AppDir into an AppImage.
+		  DEPLOY_QT          Set to 1 to force deployment of Qt. Will determine to deploy
+		                 QtWebEngine and Qml as well, these can be controlled with
+		                 DEPLOY_QT_WEB_ENGINE and DEPLOY_QML. Set to 1 enable, 0 disable
+						 Set QT_DIR if the system Qt directory in LIB_DIR has a different name.
+		  DEPLOY_SDL          Set to 1 to force deployment of SDL.
+		  DEPLOY_GTK          Set to 1 to force deployment of GTK.
+		  DEPLOY_GDK          Set to 1 to force deployment of gdk-pixbuf.
+		  DEPLOY_GLYCIN       Set to 1 to force deployment of Glycin.
+		  DEPLOY_OPENGL       Set to 1 to force deployment of OpenGL.
+		  DEPLOY_VULKAN       Set to 1 to force deployment of Vulkan.
+		  DEPLOY_IMAGEMAGICK  Set to 1 to force deployment of ImageMagick.
+		  DEPLOY_LIBHEIF      Set to 1 to force deployment of libheif.
+		  DEPLOY_GEGL         Set to 1 to force deployment of GEGL.
+		  DEPLOY_BABL         Set to 1 to force deployment of babl.
+		  DEPLOY_P11KIT       Set to 1 to force deployment of p11-kit.
+		  DEPLOY_PIPEWIRE     Set to 1 to force deployment of Pipewire.
+		  DEPLOY_PULSE        Set to 1 to force deployment of pulseaudio.
+		  DEPLOY_GSTREAMER    Set to 1 to force deployment of GStreamer. By default
+		                several gstreamer plugins are removed, set DEPLOY_GSTREAMER_ALL=1
+		                if you can to deploy ALL Gstreamer plugins. (Very bloated).
+		  DEPLOY_LOCALE       Set to 1 to deploy locale data.
+		  DEPLOY_PYTHON   Set to 1 to deploy system Python. Will remove all pycache
+		                  files, set DEBLOAT_PYTHON to 0 to prevent this.
 
-	  LIB_DIR          Set source library directory if autodetection fails.
-	  NO_STRIP         Disable stripping binaries and libraries if set.
-	  APPDIR           Destination AppDir (default: ./AppDir).
-	  ANYLINUX_LIB     Preloads a library that unsets environment variables known to
-	                   cause problems to child processes. Set to 0 to disable.
-	                   Additionally you can set ANYLINUX_DO_NOT_LOAD_LIBS to a
-	                   list of colon separated libraries to prevent from being
-	                   dlopened, the entries support simple globbing, example:
-	                     export ANYLINUX_DO_NOT_LOAD_LIBS='libpipewire-0.3.so*'
-	                   Useful for applications that will try to dlopen several
-	                   optional dependencies that you do not want to include.
+		  LIB_DIR          Set source library directory if autodetection fails.
+		  NO_STRIP         Disable stripping binaries and libraries if set.
+		  APPDIR           Destination AppDir (default: ./AppDir).
+		  ANYLINUX_LIB     Preloads a library that unsets environment variables known to
+		                   cause problems to child processes. Set to 0 to disable.
+		                   Additionally you can set ANYLINUX_DO_NOT_LOAD_LIBS to a
+		                   list of colon separated libraries to prevent from being
+		                   dlopened, the entries support simple globbing, example:
+		                     export ANYLINUX_DO_NOT_LOAD_LIBS='libpipewire-0.3.so*'
+		                   Useful for applications that will try to dlopen several
+		                   optional dependencies that you do not want to include.
 
-	  ALWAYS_SOFTWARE  Set to 1 to enable. Sets several env variables to make
-	                   applications use software rendering, use this option when
-	                   you do not want hardware acceleration.
-	                   Will fail if the application makes use of mesa during deployment.
+		  ALWAYS_SOFTWARE  Set to 1 to enable. Sets several env variables to make
+		                   applications use software rendering, use this option when
+		                   you do not want hardware acceleration.
+		                   Will fail if the application makes use of mesa during deployment.
 
-	  PATH_MAPPING    Configures and preloads pathmap.
-	                  Set this variable if the application is hardcoded to look
-	                  into /usr and similar locations, example:
-	                    export PATH_MAPPING='
-	                      /usr/lib/myapp_libs:\${SHARUN_DIR}/lib/myapp_libs
-	                      /etc/myapp.conf:\${SHARUN_DIR}/etc/myapp.conf
-	                    '
-	                  \${SHARUN_DIR} here must NOT expand!
-	                  The braces in the variable are mandatory!
+		  PATH_MAPPING    Configures and preloads pathmap.
+		                  Set this variable if the application is hardcoded to look
+		                  into /usr and similar locations, example:
+		                    export PATH_MAPPING='
+		                      /usr/lib/myapp_libs:\${SHARUN_DIR}/lib/myapp_libs
+		                      /etc/myapp.conf:\${SHARUN_DIR}/etc/myapp.conf
+		                    '
+		                  \${SHARUN_DIR} here must NOT expand!
+		                  The braces in the variable are mandatory!
 
-	  NOTE:
-	  Several of these options get turned on automatically based on what is being deployed.
+		  NOTE:
+		  Several of these options get turned on automatically based on what is being deployed.
 
-	  EXAMPLES:
-	  DEPLOY_OPENGL=1 ./quick-sharun.sh /path/to/myapp
-	  DESKTOP=/path/to/app.desktop ICON=/path/to/icon.png ./quick-sharun.sh /path/to/myapp
-	  ADD_HOOKS="self-updater.hook:fix-namespaces.hook" ./quick-sharun.sh /path/to/myapp
+		  EXAMPLES:
+		  DEPLOY_OPENGL=1 ./quick-sharun.sh /path/to/myapp
+		  DESKTOP=/path/to/app.desktop ICON=/path/to/icon.png ./quick-sharun.sh /path/to/myapp
+		  ADD_HOOKS="self-updater.hook:fix-namespaces.hook" ./quick-sharun.sh /path/to/myapp
 
-	  SEE ALSO:
-	  sharun  (https://github.com/VHSgunzo/sharun)
-	  pathmap (https://github.com/VHSgunzo/pathmap)
+		  SEE ALSO:
+		  sharun  (https://github.com/VHSgunzo/sharun)
+		  pathmap (https://github.com/VHSgunzo/pathmap)
 	EOF
 	exit 1
 }
@@ -263,8 +263,8 @@ _get_icon() {
 			exit 1
 		fi
 		_echo "* Adding dummy $icon_name icon to $APPDIR..."
-		:> "$APPDIR"/"$icon_name".png
-		:> "$DIRICON"
+		: >"$APPDIR"/"$icon_name".png
+		: >"$DIRICON"
 	elif [ -f "$ICON" ]; then
 		_echo "* Adding $ICON to $APPDIR..."
 		cp -v "$ICON" "$APPDIR"
@@ -282,7 +282,7 @@ _get_icon() {
 	if [ ! -f "$DIRICON" ]; then
 		# try the first top level .png or .svg before searching
 		set -- "$APPDIR"/*.png "$APPDIR"/*.svg
-		for i do
+		for i; do
 			if [ -f "$i" ]; then
 				cp -v "$i" "$DIRICON"
 				return 0
@@ -299,14 +299,14 @@ _get_icon() {
 			for s in $sizes; do
 				set -- "$@" /usr/share/icons/hicolor/"$s"/apps/"$icon_name"*
 			done
-			for i do
+			for i; do
 				if [ -f "$i" ]; then
 					case "$i" in
-						*.png|*.svg)
-							cp -v "$i" "$APPDIR"
-							cp -v "$i" "$DIRICON"
-							break
-							;;
+					*.png | *.svg)
+						cp -v "$i" "$APPDIR"
+						cp -v "$i" "$DIRICON"
+						break
+						;;
 					esac
 				fi
 			done
@@ -332,7 +332,7 @@ _sanity_check() {
 		exit 1
 	fi
 
-	if  [ -n "$PATH_MAPPING" ] && ! echo "$PATH_MAPPING" | grep -q 'SHARUN_DIR'; then
+	if [ -n "$PATH_MAPPING" ] && ! echo "$PATH_MAPPING" | grep -q 'SHARUN_DIR'; then
 		_err_msg 'ERROR: PATH_MAPPING must contain unexpanded ${SHARUN_DIR} variable'
 		_err_msg 'Example:'
 		_err_msg "'PATH_MAPPING=/etc:\${SHARUN_DIR}/etc'"
@@ -455,15 +455,15 @@ _simple_test_appimage() {
 
 	test="$(cat "$log")"
 	case "$test" in
-		*'symbol lookup error'*|\
+	*'symbol lookup error'* | \
 		*'error while loading shared libraries'*)
-			>&2 echo "$test"
-			_err_msg "------------------------------------------------------------"
-			_err_msg "ERROR: '$APP' failed simple test!"
-			_err_msg "------------------------------------------------------------"
-			sleep 20
-			exit 1
-			;;
+		echo >&2 "$test"
+		_err_msg "------------------------------------------------------------"
+		_err_msg "ERROR: '$APP' failed simple test!"
+		_err_msg "------------------------------------------------------------"
+		sleep 20
+		exit 1
+		;;
 	esac
 
 	_echo "------------------------------------------------------------"
@@ -488,7 +488,7 @@ _save_array() {
 
 _remove_empty_dirs() {
 	find "$1" -type d \
-	  -exec rmdir -p --ignore-fail-on-non-empty {} + 2>/dev/null || true
+		-exec rmdir -p --ignore-fail-on-non-empty {} + 2>/dev/null || true
 }
 
 # skip non executable binaries and .node binaries
@@ -496,19 +496,19 @@ _remove_empty_dirs() {
 _is_deployable_binary() {
 	if [ -x "$1" ]; then
 		case "$1" in
-			*.node) :;;
-			*) return 0;;
+		*.node) : ;;
+		*) return 0 ;;
 		esac
 	fi
 	return 1
 }
 
 _determine_what_to_deploy() {
-	for bin do
+	for bin; do
 		# ignore flags
 		case "$bin" in
-			--) break   ;;
-			-*) continue;;
+		--) break ;;
+		-*) continue ;;
 		esac
 
 		if [ ! -e "$bin" ]; then
@@ -527,8 +527,8 @@ _determine_what_to_deploy() {
 			if grep -aoq -m 1 'libpulse.so' "$bin"; then
 				DEPLOY_PULSE=${DEPLOY_PULSE:-1}
 			fi
-			if grep -aoq -m 1 'disable-gpu-sandbox' "$bin" \
-			  && grep -aoq -m 1 'no-zygote-sandbox' "$bin"; then
+			if grep -aoq -m 1 'disable-gpu-sandbox' "$bin" &&
+				grep -aoq -m 1 'no-zygote-sandbox' "$bin"; then
 				DEPLOY_ELECTRON=${DEPLOY_ELECTRON:-1}
 				ELECTRON_BIN=$(readlink -f "$bin")
 			fi
@@ -544,81 +544,81 @@ _determine_what_to_deploy() {
 
 		# bin may be a shared library, in that case add it as well
 		case "$bin" in
-			*.so*) NEEDED_LIBS="$bin $NEEDED_LIBS";;
+		*.so*) NEEDED_LIBS="$bin $NEEDED_LIBS" ;;
 		esac
 
 		# check linked libraries and enable each mode accordingly
 		for lib in $NEEDED_LIBS; do
 			case "$lib" in
-				*libQt5Core.so*)
-					DEPLOY_QT=${DEPLOY_QT:-1}
-					QT_DIR=${QT_DIR:-qt5}
-					;;
-				*libQt6Core.so*)
-					DEPLOY_QT=${DEPLOY_QT:-1}
-					QT_DIR=${QT_DIR:-qt6}
-					;;
-				*libQt*Qml*.so*)
-					DEPLOY_QML=${DEPLOY_QML:-1}
-					;;
-				*libQt*WebEngineCore.so*)
-					DEPLOY_QT_WEB_ENGINE=${DEPLOY_QT_WEB_ENGINE:-1}
-					DEPLOY_ELECTRON=${DEPLOY_ELECTRON:-1}
-					;;
-				*libgtk-3*.so*)
-					DEPLOY_GTK=${DEPLOY_GTK:-1}
-					GTK_DIR=gtk-3.0
-					;;
-				*libgtk-4*.so*)
-					DEPLOY_GTK=${DEPLOY_GTK:-1}
-					GTK_DIR=gtk-4.0
-					;;
-				*libgdk_pixbuf*.so*)
-					DEPLOY_GDK=${DEPLOY_GDK:-1}
-					;;
-				*libglycin*.so*)
-					DEPLOY_GLYCIN=${DEPLOY_GLYCIN:-1}
-					;;
-				*libwebkit*gtk*.so*)
-					DEPLOY_WEBKIT2GTK=${DEPLOY_WEBKIT2GTK:-1}
-					;;
-				*libsoup-*.so*)
-					DEPLOY_GLIB_NETWORKING=${DEPLOY_GLIB_NETWORKING:-1}
-					;;
-				*libSDL*.so*)
-					DEPLOY_SDL=${DEPLOY_SDL:-1}
-					;;
-				*libflutter*linux*.so*)
-					DEPLOY_FLUTTER=${DEPLOY_FLUTTER:-1}
-					FLUTTER_LIB=$lib
-					;;
-				*libpipewire*.so*)
-					DEPLOY_PIPEWIRE=${DEPLOY_PIPEWIRE:-1}
-					;;
-				*libgstreamer*.so*)
-					DEPLOY_GSTREAMER=${DEPLOY_GSTREAMER:-1}
-					;;
-				*libMagick*.so*)
-					DEPLOY_IMAGEMAGICK=${DEPLOY_IMAGEMAGICK:-1}
-					;;
-				*libImlib2.so*)
-					DEPLOY_IMLIB2=${DEPLOY_IMLIB2:-1}
-					;;
-				*libgegl*.so*)
-					DEPLOY_GEGL=${DEPLOY_GEGL:-1}
-					;;
-				*libbabl*.so*)
-					DEPLOY_BABL=${DEPLOY_BABL:-1}
-					;;
-				*libheif.so*)
-					DEPLOY_LIBHEIF=${DEPLOY_LIBHEIF:-1}
-					;;
-				*libgs.so*)
-					DEPLOY_GHOSTSCRIPT=${DEPLOY_GHOSTSCRIPT:-1}
-					;;
-				*libp11-kit.so*)
-					DEPLOY_P11KIT=${DEPLOY_P11KIT:-1}
-					;;
+			*libQt5Core.so*)
+				DEPLOY_QT=${DEPLOY_QT:-1}
+				QT_DIR=${QT_DIR:-qt5}
+				;;
+			*libQt6Core.so*)
+				DEPLOY_QT=${DEPLOY_QT:-1}
+				QT_DIR=${QT_DIR:-qt6}
+				;;
+			*libQt*Qml*.so*)
+				DEPLOY_QML=${DEPLOY_QML:-1}
+				;;
+			*libQt*WebEngineCore.so*)
+				DEPLOY_QT_WEB_ENGINE=${DEPLOY_QT_WEB_ENGINE:-1}
+				DEPLOY_ELECTRON=${DEPLOY_ELECTRON:-1}
+				;;
+			*libgtk-3*.so*)
+				DEPLOY_GTK=${DEPLOY_GTK:-1}
+				GTK_DIR=gtk-3.0
+				;;
+			*libgtk-4*.so*)
+				DEPLOY_GTK=${DEPLOY_GTK:-1}
+				GTK_DIR=gtk-4.0
+				;;
+			*libgdk_pixbuf*.so*)
+				DEPLOY_GDK=${DEPLOY_GDK:-1}
+				;;
+			*libglycin*.so*)
+				DEPLOY_GLYCIN=${DEPLOY_GLYCIN:-1}
+				;;
+			*libwebkit*gtk*.so*)
+				DEPLOY_WEBKIT2GTK=${DEPLOY_WEBKIT2GTK:-1}
+				;;
+			*libsoup-*.so*)
+				DEPLOY_GLIB_NETWORKING=${DEPLOY_GLIB_NETWORKING:-1}
+				;;
+			*libSDL*.so*)
+				DEPLOY_SDL=${DEPLOY_SDL:-1}
+				;;
+			*libflutter*linux*.so*)
+				DEPLOY_FLUTTER=${DEPLOY_FLUTTER:-1}
+				FLUTTER_LIB=$lib
+				;;
+			*libpipewire*.so*)
+				DEPLOY_PIPEWIRE=${DEPLOY_PIPEWIRE:-1}
+				;;
+			*libgstreamer*.so*)
+				DEPLOY_GSTREAMER=${DEPLOY_GSTREAMER:-1}
+				;;
+			*libMagick*.so*)
+				DEPLOY_IMAGEMAGICK=${DEPLOY_IMAGEMAGICK:-1}
+				;;
+			*libImlib2.so*)
+				DEPLOY_IMLIB2=${DEPLOY_IMLIB2:-1}
+				;;
+			*libgegl*.so*)
+				DEPLOY_GEGL=${DEPLOY_GEGL:-1}
+				;;
+			*libbabl*.so*)
+				DEPLOY_BABL=${DEPLOY_BABL:-1}
+				;;
+			*libheif.so*)
+				DEPLOY_LIBHEIF=${DEPLOY_LIBHEIF:-1}
+				;;
+			*libgs.so*)
+				DEPLOY_GHOSTSCRIPT=${DEPLOY_GHOSTSCRIPT:-1}
+				;;
+			*libp11-kit.so*)
+				DEPLOY_P11KIT=${DEPLOY_P11KIT:-1}
+				;;
 			esac
 		done
 	done
@@ -655,20 +655,20 @@ _make_deployment_array() {
 	if [ -d "$LIB_DIR"/gconv ]; then
 		_echo "* Deploying minimal gconv"
 		set -- "$@" \
-			"$LIB_DIR"/gconv/UTF*.so*     \
-			"$LIB_DIR"/gconv/ANSI*.so*    \
-			"$LIB_DIR"/gconv/CP*.so*      \
-			"$LIB_DIR"/gconv/LATIN*.so*   \
+			"$LIB_DIR"/gconv/UTF*.so* \
+			"$LIB_DIR"/gconv/ANSI*.so* \
+			"$LIB_DIR"/gconv/CP*.so* \
+			"$LIB_DIR"/gconv/LATIN*.so* \
 			"$LIB_DIR"/gconv/UNICODE*.so* \
 			"$LIB_DIR"/gconv/ISO8859*.so*
 	fi
 	if [ "$ALWAYS_SOFTWARE" = 1 ]; then
 		DEPLOY_OPENGL=0
 		DEPLOY_VULKAN=0
-		echo 'GSK_RENDERER=cairo'        >> "$APPENV"
-		echo 'GDK_DISABLE=gl,vulkan'     >> "$APPENV"
-		echo 'GDK_GL=disable'            >> "$APPENV"
-		echo 'QT_QUICK_BACKEND=software' >> "$APPENV"
+		echo 'GSK_RENDERER=cairo' >>"$APPENV"
+		echo 'GDK_DISABLE=gl,vulkan' >>"$APPENV"
+		echo 'GDK_GL=disable' >>"$APPENV"
+		echo 'QT_QUICK_BACKEND=software' >>"$APPENV"
 		export GSK_RENDERER=cairo
 		export GDK_DISABLE=gl,vulkan
 		export GDK_GL=disable
@@ -697,45 +697,45 @@ _make_deployment_array() {
 
 		for lib in $NEEDED_LIBS; do
 			case "$lib" in
-				*libQt*Gui.so*)
-					# terrible hack to prevent partial gtk deployment
-					# see: https://github.com/VHSgunzo/sharun/issues/91
-					p="$plugindir"/platformthemes/libqgtk3.so
-					if [ "$DEPLOY_GTK" != 1 ] \
-					  && [ -n "$CI" ] && [ -w "$p" ]; then
-						mv "$p" "$TMPDIR"
-					fi
-					set -- "$@" \
-						"$plugindir"/imageformats/* \
-						"$plugindir"/iconengines/*  \
-						"$plugindir"/styles/*       \
-						"$plugindir"/platform*/*    \
-						"$plugindir"/wayland-*/*    \
-						"$plugindir"/xcbglintegrations/*
-					;;
-				*libQt*Network.so*)
-					set -- "$@" \
-						"$plugindir"/tls/* \
-						"$plugindir"/bearer/*
-					;;
-				*libQt*Sql.so*)
-					set -- "$@" "$plugindir"/sqldrivers/*
-					;;
-				*libQt*Multimedia.so*)
-					set -- "$@" "$plugindir"/multimedia/*
-					;;
-				*libQt*PrintSupport*)
-					set -- "$@" "$plugindir"/printsupport/*
-					;;
-				*libQt*Positioning.so*)
-					set -- "$@" "$plugindir"/position/*
-					;;
+			*libQt*Gui.so*)
+				# terrible hack to prevent partial gtk deployment
+				# see: https://github.com/VHSgunzo/sharun/issues/91
+				p="$plugindir"/platformthemes/libqgtk3.so
+				if [ "$DEPLOY_GTK" != 1 ] &&
+					[ -n "$CI" ] && [ -w "$p" ]; then
+					mv "$p" "$TMPDIR"
+				fi
+				set -- "$@" \
+					"$plugindir"/imageformats/* \
+					"$plugindir"/iconengines/* \
+					"$plugindir"/styles/* \
+					"$plugindir"/platform*/* \
+					"$plugindir"/wayland-*/* \
+					"$plugindir"/xcbglintegrations/*
+				;;
+			*libQt*Network.so*)
+				set -- "$@" \
+					"$plugindir"/tls/* \
+					"$plugindir"/bearer/*
+				;;
+			*libQt*Sql.so*)
+				set -- "$@" "$plugindir"/sqldrivers/*
+				;;
+			*libQt*Multimedia.so*)
+				set -- "$@" "$plugindir"/multimedia/*
+				;;
+			*libQt*PrintSupport*)
+				set -- "$@" "$plugindir"/printsupport/*
+				;;
+			*libQt*Positioning.so*)
+				set -- "$@" "$plugindir"/position/*
+				;;
 			esac
 		done
 
 		if [ "$DEPLOY_QT_WEB_ENGINE" = 1 ]; then
 			if ! enginebin=$(find "${QT_LOCATION:-$LIB_DIR}" -type f \
-			  -name 'QtWebEngineProcess' -print -quit 2>/dev/null); then
+				-name 'QtWebEngineProcess' -print -quit 2>/dev/null); then
 				_err_msg "Cannot find QtWebEngineProcess!"
 				exit 1
 			fi
@@ -756,16 +756,16 @@ _make_deployment_array() {
 		DEPLOY_GDK=${DEPLOY_GDK:-1}
 		DEPLOY_COMMON_LIBS=${DEPLOY_COMMON_LIBS:-1}
 		set -- "$@" \
-			"$LIB_DIR"/"$GTK_DIR"/*/immodules/*   \
-			"$LIB_DIR"/gvfs/libgvfscommon.so      \
+			"$LIB_DIR"/"$GTK_DIR"/*/immodules/* \
+			"$LIB_DIR"/gvfs/libgvfscommon.so \
 			"$LIB_DIR"/gio/modules/libgvfsdbus.so \
 			"$LIB_DIR"/gio/modules/libdconfsettings.so
 
 		case "$GTK_DIR" in
-			*4*)
-				DEPLOY_OPENGL=${DEPLOY_OPENGL:-1}
-				echo 'GSETTINGS_BACKEND=keyfile' >> "$APPENV"
-				;;
+		*4*)
+			DEPLOY_OPENGL=${DEPLOY_OPENGL:-1}
+			echo 'GSETTINGS_BACKEND=keyfile' >>"$APPENV"
+			;;
 		esac
 
 		if [ "$DEPLOY_WEBKIT2GTK" = 1 ]; then
@@ -780,7 +780,7 @@ _make_deployment_array() {
 			_echo "* Deploying Glib-Netwroking"
 			DEPLOY_P11KIT=${DEPLOY_P11KIT:-1}
 			set -- "$@" \
-				"$LIB_DIR"/gio/modules/libgiognutls.so   \
+				"$LIB_DIR"/gio/modules/libgiognutls.so \
 				"$LIB_DIR"/gio/modules/libgiolibproxy.so \
 				"$LIB_DIR"/gio/modules/libgiognomeproxy.so
 		fi
@@ -796,9 +796,9 @@ _make_deployment_array() {
 		set -- "$@" "$gdkdir"/*svg*.so*
 		for lib in $NEEDED_LIBS; do
 			case "$lib" in
-				*libjxl.so*)  set -- "$@" "$gdkdir"/*jxl*.so* ;;
-				*libavif.so*) set -- "$@" "$gdkdir"/*avif*.so*;;
-				*libheif.so*) set -- "$@" "$gdkdir"/*heif*.so*;;
+			*libjxl.so*) set -- "$@" "$gdkdir"/*jxl*.so* ;;
+			*libavif.so*) set -- "$@" "$gdkdir"/*avif*.so* ;;
+			*libheif.so*) set -- "$@" "$gdkdir"/*heif*.so* ;;
 			esac
 		done
 	fi
@@ -807,8 +807,8 @@ _make_deployment_array() {
 		DEPLOY_PULSE=${DEPLOY_PULSE:-1}
 		DEPLOY_COMMON_LIBS=${DEPLOY_COMMON_LIBS:-1}
 		set -- "$@" \
-			"$LIB_DIR"/libSDL*.so*   \
-			"$LIB_DIR"/libudev.so*   \
+			"$LIB_DIR"/libSDL*.so* \
+			"$LIB_DIR"/libudev.so* \
 			"$LIB_DIR"/libusb-1*.so* \
 			"$LIB_DIR"/libdecor*.so*
 	fi
@@ -828,11 +828,11 @@ _make_deployment_array() {
 		DEPLOY_OPENGL=${DEPLOY_OPENGL:-1}
 		DEPLOY_VULKAN=${DEPLOY_VULKAN:-1}
 		set -- "$@" \
-			"$LIB_DIR"/libva.so*          \
-			"$LIB_DIR"/libva-drm.so*      \
-			"$LIB_DIR"/libpci.so*         \
-			"$LIB_DIR"/libnss*.so*        \
-			"$LIB_DIR"/libsoftokn3.so*    \
+			"$LIB_DIR"/libva.so* \
+			"$LIB_DIR"/libva-drm.so* \
+			"$LIB_DIR"/libpci.so* \
+			"$LIB_DIR"/libnss*.so* \
+			"$LIB_DIR"/libsoftokn3.so* \
 			"$LIB_DIR"/libfreeblpriv3.so* \
 			"$LIB_DIR"/libnss_mdns*_minimal.so*
 		# electron has a resources directory that may have binaries
@@ -848,22 +848,22 @@ _make_deployment_array() {
 	if [ "$DEPLOY_OPENGL" = 1 ] || [ "$DEPLOY_VULKAN" = 1 ]; then
 		DEPLOY_COMMON_LIBS=${DEPLOY_COMMON_LIBS:-1}
 		set -- "$@" \
-			"$LIB_DIR"/dri/*   \
+			"$LIB_DIR"/dri/* \
 			"$LIB_DIR"/vdpau/* \
 			"$LIB_DIR"/libgallium*.so*
 		if [ "$DEPLOY_OPENGL" = 1 ]; then
 			_echo "* Deploying OpenGL"
 			set -- "$@" \
-				"$LIB_DIR"/libEGL*.so*   \
-				"$LIB_DIR"/libGLX*.so*   \
-				"$LIB_DIR"/libGL.so*     \
+				"$LIB_DIR"/libEGL*.so* \
+				"$LIB_DIR"/libGLX*.so* \
+				"$LIB_DIR"/libGL.so* \
 				"$LIB_DIR"/libOpenGL.so* \
 				"$LIB_DIR"/libGLESv2.so*
 		fi
 		if [ "$DEPLOY_VULKAN" = 1 ]; then
 			_echo "* Deploying vulkan"
 			set -- "$@" \
-				"$LIB_DIR"/libvulkan*.so*  \
+				"$LIB_DIR"/libvulkan*.so* \
 				"$LIB_DIR"/libVkLayer*.so*
 			ADD_HOOKS="${ADD_HOOKS:+$ADD_HOOKS:}vulkan-check.src.hook"
 		fi
@@ -873,8 +873,8 @@ _make_deployment_array() {
 		DEPLOY_PULSE=${DEPLOY_PULSE:-1}
 		set -- "$@" \
 			"$LIB_DIR"/pipewire-*/* \
-			"$LIB_DIR"/spa-*/*      \
-			"$LIB_DIR"/spa-*/*/*    \
+			"$LIB_DIR"/spa-*/* \
+			"$LIB_DIR"/spa-*/*/* \
 			"$LIB_DIR"/alsa-lib/*pipewire*.so*
 	fi
 	if [ "$DEPLOY_PULSE" = 1 ]; then
@@ -944,7 +944,7 @@ _make_deployment_array() {
 			fi
 		fi
 		set -- "$@" \
-			"$GST_DIR"/*.so*      \
+			"$GST_DIR"/*.so* \
 			"$GST_DIR"/gst*helper \
 			"$GST_DIR"/gst*scanner
 		# On ubuntu and alpine the gstreamer binaries are on a different dir
@@ -960,7 +960,7 @@ _make_deployment_array() {
 	if [ "$DEPLOY_IMAGEMAGICK" = 1 ]; then
 		_echo "* Deploying ImageMagick"
 		set -- "$@" "$LIB_DIR"/libMagick*.so*
-		if b=$(command -v magick);  then set -- "$@" "$b"; fi
+		if b=$(command -v magick); then set -- "$@" "$b"; fi
 		if b=$(command -v convert); then set -- "$@" "$b"; fi
 		# imagemagick optionally requires potrace to convert png to svg
 		if b=$(command -v potrace); then set -- "$@" "$b"; fi
@@ -974,7 +974,7 @@ _make_deployment_array() {
 	if [ "$DEPLOY_IMLIB2" = 1 ]; then
 		_echo "* Deploying Imlib2"
 		set -- "$@" \
-			"$LIB_DIR"/libImlib2.so*    \
+			"$LIB_DIR"/libImlib2.so* \
 			"$LIB_DIR"/imlib2/filters/* \
 			"$LIB_DIR"/imlib2/loaders/*
 	fi
@@ -988,7 +988,7 @@ _make_deployment_array() {
 	if [ "$DEPLOY_GEGL" = 1 ]; then
 		_echo "* Deploying gegl"
 		set -- "$@" "$LIB_DIR"/gegl-*/*
-		if b=$(command -v gegl);        then set -- "$@" "$b"; fi
+		if b=$(command -v gegl); then set -- "$@" "$b"; fi
 		if b=$(command -v gegl-imgcmp); then set -- "$@" "$b"; fi
 	fi
 	if [ "$DEPLOY_BABL" = 1 ]; then
@@ -1008,13 +1008,13 @@ _make_deployment_array() {
 		# only do it if libavcodec is already required
 		for p in "$heifdir"/*; do
 			case "$p" in
-				*ffmpeg*) continue;;
-				*)        set -- "$@" "$p";;
+			*ffmpeg*) continue ;;
+			*) set -- "$@" "$p" ;;
 			esac
 		done
 		for lib in $NEEDED_LIBS; do
 			case "$lib" in
-				*libavcodec.so*)  set -- "$@" "$heifdir"/*ffmpeg*.so*;;
+			*libavcodec.so*) set -- "$@" "$heifdir"/*ffmpeg*.so* ;;
 			esac
 		done
 	fi
@@ -1044,34 +1044,34 @@ _make_deployment_array() {
 			exit 1
 		fi
 		set -- "$@" \
-			"$(command -v dotnet)"  \
+			"$(command -v dotnet)" \
 			$(find "$DOTNET_DIR"/shared -type f -name '*.so*' -print)
 		cp -r "$DOTNET_DIR"/shared "$APPDIR"/bin
-		cp -r "$DOTNET_DIR"/host   "$APPDIR"/bin
-		echo "DOTNET_ROOT=${SHARUN_DIR}/bin" >> "$APPENV"
+		cp -r "$DOTNET_DIR"/host "$APPDIR"/bin
+		echo "DOTNET_ROOT=${SHARUN_DIR}/bin" >>"$APPENV"
 	fi
 	# these are needed by several toolkits
 	if [ "$DEPLOY_COMMON_LIBS" = 1 ]; then
 		set -- "$@" \
-			"$LIB_DIR"/libXi.so*             \
-			"$LIB_DIR"/libXcursor.so*        \
-			"$LIB_DIR"/libxcb-dri*.so*       \
-			"$LIB_DIR"/libxcb-glx.so*        \
-			"$LIB_DIR"/libxcb-ewmh.so*       \
-			"$LIB_DIR"/libxcb-icccm.so*      \
-			"$LIB_DIR"/libxkbcommon.so*      \
-			"$LIB_DIR"/libxkbcommon-x11.so*  \
-			"$LIB_DIR"/libXext.so*           \
-			"$LIB_DIR"/libXfixes.so*         \
-			"$LIB_DIR"/libXrandr.so*         \
-			"$LIB_DIR"/libXss.so*            \
-			"$LIB_DIR"/libX11-xcb.so*        \
-			"$LIB_DIR"/libwayland-egl.so*    \
+			"$LIB_DIR"/libXi.so* \
+			"$LIB_DIR"/libXcursor.so* \
+			"$LIB_DIR"/libxcb-dri*.so* \
+			"$LIB_DIR"/libxcb-glx.so* \
+			"$LIB_DIR"/libxcb-ewmh.so* \
+			"$LIB_DIR"/libxcb-icccm.so* \
+			"$LIB_DIR"/libxkbcommon.so* \
+			"$LIB_DIR"/libxkbcommon-x11.so* \
+			"$LIB_DIR"/libXext.so* \
+			"$LIB_DIR"/libXfixes.so* \
+			"$LIB_DIR"/libXrandr.so* \
+			"$LIB_DIR"/libXss.so* \
+			"$LIB_DIR"/libX11-xcb.so* \
+			"$LIB_DIR"/libwayland-egl.so* \
 			"$LIB_DIR"/libwayland-cursor.so* \
 			"$LIB_DIR"/libwayland-client.so* \
 			"$LIB_DIR"/libnss_mymachines.so* \
-			"$LIB_DIR"/libnss_resolve.so*    \
-			"$LIB_DIR"/libnss_files.so*      \
+			"$LIB_DIR"/libnss_resolve.so* \
+			"$LIB_DIR"/libnss_files.so* \
 			"$LIB_DIR"/libnss_dns.so*
 	fi
 
@@ -1084,11 +1084,11 @@ _make_deployment_array() {
 			if [ -d "$d" ]; then
 				_echo " - $d"
 				for f in \
-					"$d"/*          \
-					"$d"/*/*        \
-					"$d"/*/*/*      \
-					"$d"/*/*/*/*    \
-					"$d"/*/*/*/*/*  \
+					"$d"/* \
+					"$d"/*/* \
+					"$d"/*/*/* \
+					"$d"/*/*/*/* \
+					"$d"/*/*/*/*/* \
 					"$d"/*/*/*/*/*/*; do
 
 					if [ ! -f "$f" ]; then
@@ -1096,19 +1096,19 @@ _make_deployment_array() {
 					fi
 
 					case "$f" in
-						*.so*)
+					*.so*)
+						set -- "$@" "$f"
+						;;
+					*)
+						if _is_deployable_binary "$f"; then
 							set -- "$@" "$f"
-							;;
-						*)
-							if _is_deployable_binary "$f"; then
-								set -- "$@" "$f"
-							fi
-							;;
+						fi
+						;;
 					esac
 				done
 			fi
 		done <<-EOF
-		$ADD_DIR
+			$ADD_DIR
 		EOF
 	fi
 
@@ -1156,7 +1156,7 @@ _handle_bins_scripts() {
 	if [ -d "$1" ]; then
 		gstlibdir="$1"
 		set -- "$APPDIR"/shared/bin/gst-*
-		for bin do
+		for bin; do
 			if [ -f "$bin" ]; then
 				ln "$APPDIR"/sharun "$gstlibdir"/"${bin##*/}"
 			fi
@@ -1174,7 +1174,7 @@ _handle_bins_scripts() {
 
 	# handle shell scripts
 	set -- "$APPDIR"/bin/*
-	for s do
+	for s; do
 		if ! head -c 20 "$s" | grep -q '#!.*sh'; then
 			continue
 		fi
@@ -1208,17 +1208,17 @@ _add_anylinux_lib() {
 	fi
 
 	if ! grep -q 'anylinux.so' "$APPDIR"/.preload 2>/dev/null; then
-		echo "anylinux.so" >> "$APPDIR"/.preload
+		echo "anylinux.so" >>"$APPDIR"/.preload
 	fi
 
 	# remove xdg-open wrapper not needed when the lib is in use
 	# we still need to have a wrapper for gio-launch-desktop though
 	if [ -f "$APPDIR"/bin/gio-launch-desktop ]; then
 		rm -f "$APPDIR"/bin/gio-launch-desktop
-		cat <<-'EOF' > "$APPDIR"/bin/gio-launch-desktop
-		#!/bin/sh
-		export GIO_LAUNCHED_DESKTOP_FILE_PID=$$
-		exec "$@"
+		cat <<-'EOF' >"$APPDIR"/bin/gio-launch-desktop
+			#!/bin/sh
+			export GIO_LAUNCHED_DESKTOP_FILE_PID=$$
+			exec "$@"
 		EOF
 		chmod +x "$APPDIR"/bin/gio-launch-desktop
 	fi
@@ -1254,8 +1254,8 @@ _add_gtk_class_fix() {
 
 	class=$(awk -F'=| ' '/^StartupWMClass=/{print $2; exit}' "$DESKTOP_ENTRY")
 
-	echo "GTK_WINDOW_CLASS=$class"  >> "$APPDIR"/.env
-	echo "gtk-class-fix.so"         >> "$APPDIR"/.preload
+	echo "GTK_WINDOW_CLASS=$class" >>"$APPDIR"/.env
+	echo "gtk-class-fix.so" >>"$APPDIR"/.preload
 	_echo "* gtk-class-fix.so successfully added!"
 }
 
@@ -1279,40 +1279,40 @@ _add_p11kit_cert_hook() {
 		return 0
 	fi
 
-	cat <<-'EOF' > "$cert_check"
-	#!/bin/sh
+	cat <<-'EOF' >"$cert_check"
+		#!/bin/sh
 
-	_possible_certs='
-	  /etc/ssl/certs/ca-certificates.crt
-	  /etc/pki/tls/cert.pem
-	  /etc/pki/tls/cacert.pem
-	  /etc/ssl/cert.pem
-	  /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-	  /var/lib/ca-certificates/ca-bundle.pem
-	'
+		_possible_certs='
+		  /etc/ssl/certs/ca-certificates.crt
+		  /etc/pki/tls/cert.pem
+		  /etc/pki/tls/cacert.pem
+		  /etc/ssl/cert.pem
+		  /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+		  /var/lib/ca-certificates/ca-bundle.pem
+		'
 
-	for c in $_possible_certs; do
-	    if [ -f "$c" ]; then
-	        break
-	    fi
-	done
+		for c in $_possible_certs; do
+		    if [ -f "$c" ]; then
+		        break
+		    fi
+		done
 
-	if [ -f "$c" ]; then
-	    # With p11kit we have to make a symlink in /tmp because the meme
-	    # library does not check any of these variables set by sharun:
-	    #
-	    # REQUESTS_CA_BUNDLE
-	    # CURL_CA_BUNDLE
-	    # SSL_CERT_FILE
-	    #
-	    # So we had to patch it to a path in /tmp and now symlink to the
-	    # found certificate at runtime...
-	    _host_cert=/tmp/.___host-certs/ca-certificates.crt
-	    if [ -d "$APPDIR"/lib/pkcs11 ] && [ ! -f "$_host_cert" ]; then
-	        mkdir -p /tmp/.___host-certs || :
-	        ln -sfn "$c" "$_host_cert" || :
-	    fi
-	fi
+		if [ -f "$c" ]; then
+		    # With p11kit we have to make a symlink in /tmp because the meme
+		    # library does not check any of these variables set by sharun:
+		    #
+		    # REQUESTS_CA_BUNDLE
+		    # CURL_CA_BUNDLE
+		    # SSL_CERT_FILE
+		    #
+		    # So we had to patch it to a path in /tmp and now symlink to the
+		    # found certificate at runtime...
+		    _host_cert=/tmp/.___host-certs/ca-certificates.crt
+		    if [ -d "$APPDIR"/lib/pkcs11 ] && [ ! -f "$_host_cert" ]; then
+		        mkdir -p /tmp/.___host-certs || :
+		        ln -sfn "$c" "$_host_cert" || :
+		    fi
+		fi
 	EOF
 	chmod +x "$cert_check"
 }
@@ -1322,8 +1322,9 @@ _map_paths_ld_preload_open() {
 	# entries for sharun, pathmap accepts new lines in the variable
 	# but the .env library used by sharun does not
 	if [ -n "$PATH_MAPPING" ] && [ ! -f "$DST_LIB_DIR"/path-mapping.so ]; then
-		PATH_MAPPING=$(echo "$PATH_MAPPING"   \
-			| tr '\n' ',' | tr -d '[:space:]' | sed 's/,*$//; s/^,*//'
+		PATH_MAPPING=$(
+			echo "$PATH_MAPPING" |
+				tr '\n' ',' | tr -d '[:space:]' | sed 's/,*$//; s/^,*//'
 		)
 
 		deps="git make"
@@ -1341,8 +1342,8 @@ _map_paths_ld_preload_open() {
 		)
 
 		mv -v "$TMPDIR"/ld-preload-open/path-mapping.so "$DST_LIB_DIR"
-		echo "path-mapping.so" >> "$APPDIR"/.preload
-		echo "PATH_MAPPING=$PATH_MAPPING" >> "$APPENV"
+		echo "path-mapping.so" >>"$APPDIR"/.preload
+		echo "PATH_MAPPING=$PATH_MAPPING" >>"$APPENV"
 		_echo "* PATH_MAPPING successfully added!"
 		echo ""
 	fi
@@ -1351,9 +1352,9 @@ _map_paths_ld_preload_open() {
 _map_paths_binary_patch() {
 	if [ "$PATH_MAPPING_HARDCODED" = 1 ]; then
 		set -- "$APPDIR"/shared/bin/*
-		for bin do
-			_patch_away_usr_bin_dir   "$bin"
-			_patch_away_usr_lib_dir   "$bin"
+		for bin; do
+			_patch_away_usr_bin_dir "$bin"
+			_patch_away_usr_lib_dir "$bin"
 			_patch_away_usr_share_dir "$bin"
 		done
 	elif [ -n "$PATH_MAPPING_HARDCODED" ]; then
@@ -1364,12 +1365,12 @@ _map_paths_binary_patch() {
 		# only search for files to patch in the lib and bin dirs
 		path1="$APPDIR"/shared/bin
 		path2=$DST_LIB_DIR
-		for f do
+		for f; do
 			file=$(find -L "$path1"/ "$path2"/ -type f -name "$f")
 			if [ -n "$file" ]; then
 				for found in $file; do
-					_patch_away_usr_bin_dir   "$found" || :
-					_patch_away_usr_lib_dir   "$found" || :
+					_patch_away_usr_bin_dir "$found" || :
+					_patch_away_usr_lib_dir "$found" || :
 					_patch_away_usr_share_dir "$found" || :
 				done
 			else
@@ -1384,7 +1385,7 @@ _deploy_datadir() {
 	if [ "$DEPLOY_DATADIR" = 1 ]; then
 		# find if there is a datadir that matches bundled binary name
 		set -- "$APPDIR"/bin/*
-		for bin do
+		for bin; do
 			if [ ! -f "$bin" ] || [ ! -x "$bin" ]; then
 				continue
 			fi
@@ -1392,7 +1393,7 @@ _deploy_datadir() {
 
 			# skip already handled cases
 			case "$bin" in
-				dotnet) continue;;
+			dotnet) continue ;;
 			esac
 
 			for datadir in /usr/local/share/* /usr/share/*; do
@@ -1400,8 +1401,8 @@ _deploy_datadir() {
 					_echo "* Adding datadir $datadir..."
 					# fallback to cp -r if cp -Lr fails
 					# due to broken symlinks in datadir
-					cp -Lr "$datadir" "$APPDIR"/share \
-					  || cp -r "$datadir" "$APPDIR"/share
+					cp -Lr "$datadir" "$APPDIR"/share ||
+						cp -r "$datadir" "$APPDIR"/share
 					break
 				fi
 			done
@@ -1416,60 +1417,60 @@ _deploy_datadir() {
 			bin=$(awk -F'=| ' '/^Exec=/{print $2; exit}' "$1")
 			bin=${bin##*/}
 			possible_dirs=$(
-				strings "$APPDIR"/shared/bin/"$bin" \
-				  | grep -v '[;:,.(){}?<>*]' \
-				  | tr '/' '\n'
+				strings "$APPDIR"/shared/bin/"$bin" |
+					grep -v '[;:,.(){}?<>*]' |
+					tr '/' '\n'
 			)
 
 			for datadir in $possible_dirs; do
 				# skip dirs not wanted or handled by sharun
 				case "$datadir" in
-					alsa        |\
-					applications|\
-					awk         |\
-					bash        |\
-					dbus-1      |\
-					defaults    |\
-					doc         |\
-					dotnet      |\
-					et          |\
-					factory     |\
-					file        |\
-					fish        |\
-					fonts       |\
-					fontconfig  |\
-					git         |\
-					glvnd       |\
-					gvfs        |\
-					help        |\
-					i18n        |\
-					icons       |\
-					info        |\
-					java        |\
-					locale      |\
-					man         |\
-					misc        |\
-					model       |\
-					pipewire    |\
-					pixmaps     |\
-					qt          |\
-					qt4         |\
-					qt5         |\
-					qt6         |\
-					qt7         |\
-					ss          |\
-					systemd     |\
-					themes      |\
-					vala        |\
-					vulkan      |\
-					wayland     |\
-					WebP        |\
-					X11         |\
-					xcb         |\
-					zoneinfo    |\
-					zsh         )
-						continue
-						;;
+				alsa | \
+					applications | \
+					awk | \
+					bash | \
+					dbus-1 | \
+					defaults | \
+					doc | \
+					dotnet | \
+					et | \
+					factory | \
+					file | \
+					fish | \
+					fonts | \
+					fontconfig | \
+					git | \
+					glvnd | \
+					gvfs | \
+					help | \
+					i18n | \
+					icons | \
+					info | \
+					java | \
+					locale | \
+					man | \
+					misc | \
+					model | \
+					pipewire | \
+					pixmaps | \
+					qt | \
+					qt4 | \
+					qt5 | \
+					qt6 | \
+					qt7 | \
+					ss | \
+					systemd | \
+					themes | \
+					vala | \
+					vulkan | \
+					wayland | \
+					WebP | \
+					X11 | \
+					xcb | \
+					zoneinfo | \
+					zsh)
+					continue
+					;;
 				esac
 
 				for path in /usr/local/share /usr/share; do
@@ -1477,8 +1478,8 @@ _deploy_datadir() {
 					src_datadir="$path"/"$datadir"
 					dst_datadir="$APPDIR"/share/"$datadir"
 
-					if [ -d "$src_datadir" ] \
-						&& [ ! -d  "$dst_datadir" ]; then
+					if [ -d "$src_datadir" ] &&
+						[ ! -d "$dst_datadir" ]; then
 						_echo "* Adding datadir $src_datadir..."
 						# cp can fail here if src_datadir contains broken links
 						if ! cp -Lr "$src_datadir" "$dst_datadir"; then
@@ -1497,11 +1498,11 @@ _deploy_datadir() {
 		dst_dbus_dir="$APPDIR"/share/dbus-1/services
 		for f in /usr/share/dbus-1/services/*; do
 			case "${f##*/}" in
-				*"$desktopname"*)
-					_echo "* Adding dbus service $f"
-					mkdir -p "$dst_dbus_dir"
-					cp -L "$f" "$dst_dbus_dir"
-					;;
+			*"$desktopname"*)
+				_echo "* Adding dbus service $f"
+				mkdir -p "$dst_dbus_dir"
+				cp -L "$f" "$dst_dbus_dir"
+				;;
 			esac
 		done
 		sed -i -e 's|/usr/.*/||g' "$dst_dbus_dir"/* 2>/dev/null || :
@@ -1515,7 +1516,7 @@ _deploy_locale() {
 	fi
 
 	set -- "$APPDIR"/shared/bin/*
-	for bin do
+	for bin; do
 		if grep -Eaoq -m 1 "/usr/share/locale" "$bin"; then
 			DEPLOY_LOCALE=1
 			_patch_away_usr_share_dir "$bin" || true
@@ -1553,15 +1554,15 @@ _get_desktop() {
 			exit 1
 		fi
 		_echo "* Adding dummy $MAIN_BIN desktop entry to $APPDIR..."
-		cat <<-EOF > "$APPDIR"/"$MAIN_BIN".desktop
-		[Desktop Entry]
-		Name=$MAIN_BIN
-		Exec=$MAIN_BIN
-		Comment=Dummy made by quick-sharun
-		Type=Application
-		Hidden=true
-		Categories=Utility
-		Icon=$MAIN_BIN
+		cat <<-EOF >"$APPDIR"/"$MAIN_BIN".desktop
+			[Desktop Entry]
+			Name=$MAIN_BIN
+			Exec=$MAIN_BIN
+			Comment=Dummy made by quick-sharun
+			Type=Application
+			Hidden=true
+			Categories=Utility
+			Icon=$MAIN_BIN
 		EOF
 	elif [ -f "$DESKTOP" ]; then
 		_echo "* Adding $DESKTOP to $APPDIR..."
@@ -1614,26 +1615,26 @@ _check_window_class() {
 }
 
 _add_bwrap_wrapper() {
-	cat <<-'EOF' > "$APPDIR"/bin/bwrap
-	#!/bin/sh
+	cat <<-'EOF' >"$APPDIR"/bin/bwrap
+		#!/bin/sh
 
-	# AppImages crash when we bundle bwrap required by glycin loaders
-	# This terrible hack makes us able to run the glycin loaders without bwrap
-	# This is because glycin does not canonicalize the path to the glycin binaries
+		# AppImages crash when we bundle bwrap required by glycin loaders
+		# This terrible hack makes us able to run the glycin loaders without bwrap
+		# This is because glycin does not canonicalize the path to the glycin binaries
 
-	# With webkit2gtk we get weird cannot find xdg-dbus-proxy errors only
-	# in fedora besides other weird things that happen in other distros
-	# https://github.com/VHSgunzo/sharun/issues/77
+		# With webkit2gtk we get weird cannot find xdg-dbus-proxy errors only
+		# in fedora besides other weird things that happen in other distros
+		# https://github.com/VHSgunzo/sharun/issues/77
 
-	while :; do case "$1" in
-	        --) shift; break;;
-	        --chdir|--seccomp|--dev|--tmpfs|--args) shift 2;;
-	        --*bind*|--symlink|--setenv) shift 3;;
-	        -*) shift;;
-	        *) break ;;
-	        esac
-	done
-	exec "$@"
+		while :; do case "$1" in
+		        --) shift; break;;
+		        --chdir|--seccomp|--dev|--tmpfs|--args) shift 2;;
+		        --*bind*|--symlink|--setenv) shift 3;;
+		        -*) shift;;
+		        *) break ;;
+		        esac
+		done
+		exec "$@"
 	EOF
 	chmod +x "$APPDIR"/bin/bwrap
 }
@@ -1661,46 +1662,46 @@ _fix_cpython_ldconfig_mess() {
 	# patch ctypes lib
 	sed -i \
 		-e 's|/sbin/ldconfig|_ldconfig|g' \
-		-e 's|env={.*}||'                 \
+		-e 's|env={.*}||' \
 		"$pythonlib"
 
-	cat <<-'EOF' > "$ldconfig"
-	#!/bin/sh
+	cat <<-'EOF' >"$ldconfig"
+		#!/bin/sh
 
-	# wrapper that makes ldconfig -p print our bundled libraries
-	export LC_ALL=C
-	export LANG=C
-	# some distros don't include /sbin in PATH
-	export PATH="$PATH:/usr/sbin:/sbin"
+		# wrapper that makes ldconfig -p print our bundled libraries
+		export LC_ALL=C
+		export LANG=C
+		# some distros don't include /sbin in PATH
+		export PATH="$PATH:/usr/sbin:/sbin"
 
-	if [ -z "$APPDIR" ]; then
-	    APPDIR=$(cd "${0%/*}"/../ && echo "$PWD")
-	fi
+		if [ -z "$APPDIR" ]; then
+		    APPDIR=$(cd "${0%/*}"/../ && echo "$PWD")
+		fi
 
-	_list_libs() {
-	    echo "69420 libs found in cache \`/etc/ld.so.cache'"
+		_list_libs() {
+		    echo "69420 libs found in cache \`/etc/ld.so.cache'"
 
-	    case "$(uname -m)" in
-	        aarch64) arch=AArch64;;
-	        *)       arch=x86-64;;
-	    esac
+		    case "$(uname -m)" in
+		        aarch64) arch=AArch64;;
+		        *)       arch=x86-64;;
+		    esac
 
-	    for f in "$APPDIR"/shared/lib*/*.so* "$APPDIR"/shared/lib*/*/*.so*; do
-	        echo "	${f##*/} (libc6,$arch) => $f"
-	    done
+		    for f in "$APPDIR"/shared/lib*/*.so* "$APPDIR"/shared/lib*/*/*.so*; do
+		        echo " ${f##*/} (libc6,$arch) => $f"
+		    done
 
-	    echo "Cache generated by: ldconfig (GNU libc) stable release version 2.42"
-	}
+		    echo "Cache generated by: ldconfig (GNU libc) stable release version 2.42"
+		}
 
-	# lets try to use the real thing
-	case "$1" in
-	    -p|--print-cache)
-	        _list_libs
-	        ;;
-	    *)
-	        exec ldconfig "$@"
-	        ;;
-	esac
+		# lets try to use the real thing
+		case "$1" in
+		    -p|--print-cache)
+		        _list_libs
+		        ;;
+		    *)
+		        exec ldconfig "$@"
+		        ;;
+		esac
 	EOF
 	chmod +x "$ldconfig"
 
@@ -1723,9 +1724,9 @@ _fix_cpython_ldconfig_mess() {
 	set -- "$DST_LIB_DIR"/python*/site-packages/sdl3/__init__.py
 	[ -f "$1" ] || return 0
 	sed -i \
-	  -e 's|if os.path.exists(path) and SDL|if SDL|' \
-	  -e 's|binaryMap\[module\] =.*|binaryMap[module] = ctypes.CDLL(path)|' \
-	  "$1"
+		-e 's|if os.path.exists(path) and SDL|if SDL|' \
+		-e 's|binaryMap\[module\] =.*|binaryMap[module] = ctypes.CDLL(path)|' \
+		"$1"
 	_echo "* fixed pysdl broken mess... this may not work always!"
 }
 
@@ -1733,26 +1734,26 @@ _add_path_mapping_hardcoded() {
 	if [ -f "$PATH_MAPPING_SCRIPT" ]; then
 		return 0
 	fi
-	cat <<-'EOF' > "$PATH_MAPPING_SCRIPT"
-	#!/bin/sh
+	cat <<-'EOF' >"$PATH_MAPPING_SCRIPT"
+		#!/bin/sh
 
-	# this script makes symnlinks to hardcoded random dirs that
-	# were patched away by quick-sharun when hardcoded paths are
-	# detected or when 'PATH_MAPPING_HARDCODED' is used
+		# this script makes symnlinks to hardcoded random dirs that
+		# were patched away by quick-sharun when hardcoded paths are
+		# detected or when 'PATH_MAPPING_HARDCODED' is used
 
-	_tmp_bin=""
-	_tmp_lib=""
-	_tmp_share=""
+		_tmp_bin=""
+		_tmp_lib=""
+		_tmp_share=""
 
-	if [ -n "$_tmp_bin" ]; then
-	        LC_ALL=C ln -sfn "$APPDIR"/bin /tmp/"$_tmp_bin" || :
-	fi
-	if [ -n "$_tmp_lib" ]; then
-	        LC_ALL=C ln -sfn "$APPDIR"/lib /tmp/"$_tmp_lib" || :
-	fi
-	if [ -n "$_tmp_share" ]; then
-	        LC_ALL=C ln -sfn "$APPDIR"/share /tmp/"$_tmp_share" || :
-	fi
+		if [ -n "$_tmp_bin" ]; then
+		        LC_ALL=C ln -sfn "$APPDIR"/bin /tmp/"$_tmp_bin" || :
+		fi
+		if [ -n "$_tmp_lib" ]; then
+		        LC_ALL=C ln -sfn "$APPDIR"/lib /tmp/"$_tmp_lib" || :
+		fi
+		if [ -n "$_tmp_share" ]; then
+		        LC_ALL=C ln -sfn "$APPDIR"/share /tmp/"$_tmp_share" || :
+		fi
 	EOF
 	_echo "* Added $PATH_MAPPING_SCRIPT"
 }
@@ -1799,31 +1800,31 @@ _patch_away_usr_share_dir() {
 _check_hardcoded_lib_dirs() {
 	# check for hardcoded path to any other possibly bundled library dir
 	set -- "$DST_LIB_DIR"/*
-	for d do
+	for d; do
 		[ -d "$d" ] || continue
 		d=${d##*/}
 		# skip directories we already handle here or in sharun
 		case "$d" in
-			alsa-lib    |\
-			dri         |\
-			gbm         |\
-			gconv       |\
-			gdk-pixbuf* |\
-			gio         |\
-			gtk*        |\
-			gstreamer*  |\
-			gvfs        |\
-			ImageMagick*|\
-			imlib2      |\
-			libproxy    |\
-			locale      |\
-			pipewire*   |\
-			pulseaudio  |\
-			qt*         |\
-			spa*        |\
-			vdpau       )
-				continue
-				;;
+		alsa-lib | \
+			dri | \
+			gbm | \
+			gconv | \
+			gdk-pixbuf* | \
+			gio | \
+			gtk* | \
+			gstreamer* | \
+			gvfs | \
+			ImageMagick* | \
+			imlib2 | \
+			libproxy | \
+			locale | \
+			pipewire* | \
+			pulseaudio | \
+			qt* | \
+			spa* | \
+			vdpau)
+			continue
+			;;
 		esac
 
 		for f in "$DST_LIB_DIR"/*.so* "$APPDIR"/shared/bin/*; do
@@ -1857,25 +1858,25 @@ _check_hardcoded_data_dirs() {
 
 	# now check if any of the bundled datadirs need to be patched
 	set -- "$APPDIR"/share/*
-	for d do
+	for d; do
 		[ -d "$d" ] || continue
 		d=${d##*/}
 		# skip directories we already handle here or in sharun
 		case "$d" in
-			alsa     |\
-			drirc.d  |\
-			file     |\
-			glib-*   |\
-			glvnd    |\
-			icons    |\
-			libdrm   |\
-			libthai  |\
-			locale   |\
-			terminfo |\
-			vulkan   |\
-			X11      )
-				continue
-				;;
+		alsa | \
+			drirc.d | \
+			file | \
+			glib-* | \
+			glvnd | \
+			icons | \
+			libdrm | \
+			libthai | \
+			locale | \
+			terminfo | \
+			vulkan | \
+			X11)
+			continue
+			;;
 		esac
 
 		for f in "$DST_LIB_DIR"/*.so* "$APPDIR"/shared/bin/*; do
@@ -1893,7 +1894,8 @@ _sort_env_file() {
 	# make sure the .env has all the "unset" last, due to a bug in the dotenv
 	# library used by sharun all the unsets have to be declared last in the .env
 	if [ -f "$APPDIR"/.env ]; then
-		sorted_env="$(LC_ALL=C awk '
+		sorted_env="$(
+			LC_ALL=C awk '
 			{
 				if ($0 ~ /^unset/) {
 					unset_array[++u] = $0
@@ -1907,7 +1909,7 @@ _sort_env_file() {
 				}
 			}' "$APPDIR"/.env
 		)"
-		echo "$sorted_env" > "$APPDIR"/.env
+		echo "$sorted_env" >"$APPDIR"/.env
 	fi
 }
 
@@ -1928,8 +1930,8 @@ _post_deployment_steps() {
 				find ./ -type f -name '*.a' -delete || :
 				for f in $(find ./ -type f -name '*.pyc' -print); do
 					case "$f" in
-						*/"$MAIN_BIN"*) :;;
-						*) [ ! -f "$f" ] || rm -f "$f";;
+					*/"$MAIN_BIN"*) : ;;
+					*) [ ! -f "$f" ] || rm -f "$f" ;;
 					esac
 				done
 			)
@@ -1945,8 +1947,8 @@ _post_deployment_steps() {
 
 		# flutter apps need to have a relative lib and data directory
 		# we need to find the directory that contains libapp.so
-		if libapp=$(cd "$APPDIR"/bin \
-		  && find ../shared/lib/ -type f -name 'libapp.so' -print -quit); then
+		if libapp=$(cd "$APPDIR"/bin &&
+			find ../shared/lib/ -type f -name 'libapp.so' -print -quit); then
 			d=${libapp%/*}
 			if [ ! -d "$APPDIR"/bin/"${d##*/}" ]; then
 				ln -s "$d" "$APPDIR"/bin/"${d##*/}"
@@ -1977,7 +1979,7 @@ _post_deployment_steps() {
 		fi
 	fi
 	if [ "$DEPLOY_IMAGEMAGICK" = 1 ]; then
-		mkdir -p "$DST_LIB_DIR"  "$APPDIR"/etc
+		mkdir -p "$DST_LIB_DIR" "$APPDIR"/etc
 		cp -rv /etc/ImageMagick-* "$APPDIR"/etc
 
 		# we can copy /usr/share/ImageMagick to the AppDir and set MAGICK_CONFIGURE_PATH
@@ -1995,7 +1997,7 @@ _post_deployment_steps() {
 		fi
 
 		# MAGICK_HOME is all that needs to be set
-		echo 'MAGICK_HOME=${SHARUN_DIR}' >> "$APPENV"
+		echo 'MAGICK_HOME=${SHARUN_DIR}' >>"$APPENV"
 		# however MAGICK_HOME only works when compiled with a specific flag
 		# we can still make this relocatable by setting these other env variables
 		# which will always work even when not compiled with MAGICK_HOME support
@@ -2005,7 +2007,7 @@ _post_deployment_steps() {
 			cd "$APPDIR"
 			set -- shared/lib/ImageMagick-*/modules*/coders
 			if [ -d "$1" ]; then
-				echo "MAGICK_CODER_MODULE_PATH=\${SHARUN_DIR}/$1" >> "$APPENV"
+				echo "MAGICK_CODER_MODULE_PATH=\${SHARUN_DIR}/$1" >>"$APPENV"
 			fi
 			set -- shared/lib/ImageMagick-*/modules*/filters
 			if [ -d "$1" ]; then
@@ -2013,12 +2015,12 @@ _post_deployment_steps() {
 				# is NOT USED in the code and seems to be an error!!! the variable
 				# that modules.c references is MAGICK_CODER_FILTER_PATH
 				# we will still be set both just in case
-				echo "MAGICK_CODER_FILTER_PATH=\${SHARUN_DIR}/$1" >> "$APPENV"
-				echo "MAGICK_FILTER_MODULE_PATH=\${SHARUN_DIR}/$1" >> "$APPENV"
+				echo "MAGICK_CODER_FILTER_PATH=\${SHARUN_DIR}/$1" >>"$APPENV"
+				echo "MAGICK_FILTER_MODULE_PATH=\${SHARUN_DIR}/$1" >>"$APPENV"
 			fi
 			set -- etc/ImageMagick*
 			if [ -d "$1" ]; then
-				echo "MAGICK_CONFIGURE_PATH=\${SHARUN_DIR}/$1" >> "$APPENV"
+				echo "MAGICK_CONFIGURE_PATH=\${SHARUN_DIR}/$1" >>"$APPENV"
 			fi
 		)
 
@@ -2034,9 +2036,9 @@ _post_deployment_steps() {
 				cd "$dst_gsdir"
 				d=$(echo ./*/Resource/Init)
 				if [ -d "$d" ]; then
-					echo "GS_LIB=\${SHARUN_DIR}/share/ghostscript/${d#./}" >> "$APPENV"
+					echo "GS_LIB=\${SHARUN_DIR}/share/ghostscript/${d#./}" >>"$APPENV"
 				else
-					echo 'GS_LIB=${SHARUN_DIR}/share/ghostscript/Resource/Init' >> "$APPENV"
+					echo 'GS_LIB=${SHARUN_DIR}/share/ghostscript/Resource/Init' >>"$APPENV"
 				fi
 			)
 		fi
@@ -2086,12 +2088,12 @@ _post_deployment_steps() {
 
 	if [ -d "$APPDIR"/shared/lib/pipewire-0.3 ] && [ -d /usr/share/pipewire ]; then
 		cp -r /usr/share/pipewire "$APPDIR"/share
-		cat <<-'EOF' > "$APPDIR"/bin/01-pipewire-config.src.hook
-		#!/bin/false
-		_pipewire_dir=$APPDIR/share/pipewire
-		if [ ! -d /usr/share/pipewire ] && [ -d "$_pipewire_dir" ]; then
-			export PIPEWIRE_CONFIG_DIR="$_pipewire_dir"
-		fi
+		cat <<-'EOF' >"$APPDIR"/bin/01-pipewire-config.src.hook
+			#!/bin/false
+			_pipewire_dir=$APPDIR/share/pipewire
+			if [ ! -d /usr/share/pipewire ] && [ -d "$_pipewire_dir" ]; then
+				export PIPEWIRE_CONFIG_DIR="$_pipewire_dir"
+			fi
 		EOF
 	fi
 }
@@ -2102,88 +2104,88 @@ _add_apprun() {
 		return 0
 	fi
 	_echo "Adding '$f'..."
-	cat <<-'EOF' > "$f"
-	#!/bin/sh
+	cat <<-'EOF' >"$f"
+		#!/bin/sh
 
-	# Example AppRun for using the hooks of this repository.
-	# NOTE: It is meant to be used with sharun which uses a top level bin dir
+		# Example AppRun for using the hooks of this repository.
+		# NOTE: It is meant to be used with sharun which uses a top level bin dir
 
-	if [ "$APPRUN_DEBUG" = 1 ]; then
-	        set -x
-	fi
+		if [ "$APPRUN_DEBUG" = 1 ]; then
+		        set -x
+		fi
 
-	set -e
+		set -e
 
-	APPDIR=$(cd "${0%/*}" && echo "$PWD")
-	MAIN_BIN=@MAIN_BIN@
-	ARG0="${ARGV0:-$0}"
+		APPDIR=$(cd "${0%/*}" && echo "$PWD")
+		MAIN_BIN=@MAIN_BIN@
+		ARG0="${ARGV0:-$0}"
 
-	unset ARGV0
+		unset ARGV0
 
-	export APPIMAGE_ARCH=@APPIMAGE_ARCH@
-	export HOSTPATH=$PATH
-	export PATH=$APPDIR/bin:$PATH
-	export ARG0 APPDIR PATH
+		export APPIMAGE_ARCH=@APPIMAGE_ARCH@
+		export HOSTPATH=$PATH
+		export PATH=$APPDIR/bin:$PATH
+		export ARG0 APPDIR PATH
 
-	# Allow users to set env variables for specific AppImage
-	# This feature only works with the uruntime
-	if [ "$1" = '--appimage-add-env' ]; then
-	        shift
-	        for v do
-	            echo "$v" >> "$APPIMAGE".env
-	            >&2 echo "Added '$v' to $APPIMAGE.env"
-	        done
-	        exit 0
-	fi
+		# Allow users to set env variables for specific AppImage
+		# This feature only works with the uruntime
+		if [ "$1" = '--appimage-add-env' ]; then
+		        shift
+		        for v do
+		            echo "$v" >> "$APPIMAGE".env
+		            >&2 echo "Added '$v' to $APPIMAGE.env"
+		        done
+		        exit 0
+		fi
 
-	__fedora_cert=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-	if [ ! -f /etc/ssl/certs/ca-certificates.crt ] && [ -f "$__fedora_cert" ]; then
-	        CURL_CA_BUNDLE=${CURL_CA_BUNDLE:-$__fedora_cert}
-	        REQUESTS_CA_BUNDLE=${REQUESTS_CA_BUNDLE:-$__fedora_cert}
-	        SSL_CERT_FILE=${SSL_CERT_FILE:-$__fedora_cert}
-	        export CURL_CA_BUNDLE REQUESTS_CA_BUNDLE SSL_CERT_FILE
-	fi
+		__fedora_cert=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+		if [ ! -f /etc/ssl/certs/ca-certificates.crt ] && [ -f "$__fedora_cert" ]; then
+		        CURL_CA_BUNDLE=${CURL_CA_BUNDLE:-$__fedora_cert}
+		        REQUESTS_CA_BUNDLE=${REQUESTS_CA_BUNDLE:-$__fedora_cert}
+		        SSL_CERT_FILE=${SSL_CERT_FILE:-$__fedora_cert}
+		        export CURL_CA_BUNDLE REQUESTS_CA_BUNDLE SSL_CERT_FILE
+		fi
 
-	if [ -f "$APPDIR"/AppRun.lib ]; then
-	        . "$APPDIR"/AppRun.lib
-	        for hook in "$APPDIR"/bin/*.hook; do
-	            [ -e "$hook" ] || continue
-	            . "$hook"
-	        done
-	fi
+		if [ -f "$APPDIR"/AppRun.lib ]; then
+		        . "$APPDIR"/AppRun.lib
+		        for hook in "$APPDIR"/bin/*.hook; do
+		            [ -e "$hook" ] || continue
+		            . "$hook"
+		        done
+		fi
 
-	# Check if ARG0 matches a binary, fallback to $1, then binary in .desktop
-	if [ -f "$APPDIR"/bin/"${ARG0##*/}" ]; then
-	        TO_LAUNCH=$APPDIR/bin/${ARG0##*/}
-	elif [ -f "$APPDIR"/bin/"$1" ]; then
-	        TO_LAUNCH=$APPDIR/bin/$1
-	        shift
-	else
-	        TO_LAUNCH=$APPDIR/bin/$MAIN_BIN
-	fi
+		# Check if ARG0 matches a binary, fallback to $1, then binary in .desktop
+		if [ -f "$APPDIR"/bin/"${ARG0##*/}" ]; then
+		        TO_LAUNCH=$APPDIR/bin/${ARG0##*/}
+		elif [ -f "$APPDIR"/bin/"$1" ]; then
+		        TO_LAUNCH=$APPDIR/bin/$1
+		        shift
+		else
+		        TO_LAUNCH=$APPDIR/bin/$MAIN_BIN
+		fi
 
-	set -- "$TO_LAUNCH" "$@"
+		set -- "$TO_LAUNCH" "$@"
 
-	# If LD_DEBUG=libs is set outside the AppImage the output is not helpful
-	# because it will include the libs of sh, grep, cat, etc from the hooks
-	# with this var we can set LD_DEBUG=libs for the bundled application only
-	if [ "$APPIMAGE_DEBUG" = 1 ]; then
-	        cat /etc/os-release >"$PWD"/"${APPIMAGE##*/}"-debug.log || :
-	        export LD_DEBUG=libs
-	        export VK_LOADER_DEBUG=all
-	        export LC_ALL=C
-	        export SHARUN_PRINTENV=1
-	        "$@" 2>>"$PWD"/"${APPIMAGE##*/}"-debug.log || :
-	        >&2 echo "Debug log at: '$PWD/${APPIMAGE##*/}-debug.log'"
-	else
-	        exec "$@"
-	fi
+		# If LD_DEBUG=libs is set outside the AppImage the output is not helpful
+		# because it will include the libs of sh, grep, cat, etc from the hooks
+		# with this var we can set LD_DEBUG=libs for the bundled application only
+		if [ "$APPIMAGE_DEBUG" = 1 ]; then
+		        cat /etc/os-release >"$PWD"/"${APPIMAGE##*/}"-debug.log || :
+		        export LD_DEBUG=libs
+		        export VK_LOADER_DEBUG=all
+		        export LC_ALL=C
+		        export SHARUN_PRINTENV=1
+		        "$@" 2>>"$PWD"/"${APPIMAGE##*/}"-debug.log || :
+		        >&2 echo "Debug log at: '$PWD/${APPIMAGE##*/}-debug.log'"
+		else
+		        exec "$@"
+		fi
 	EOF
 
 	chmod +x "$f"
 
 	sed -i \
-		-e "s|@MAIN_BIN@|$MAIN_BIN|"  \
+		-e "s|@MAIN_BIN@|$MAIN_BIN|" \
 		-e "s|@APPIMAGE_ARCH@|$APPIMAGE_ARCH|" \
 		"$f"
 
@@ -2196,253 +2198,253 @@ _add_hooks_library() {
 		return 0
 	fi
 	_echo "Adding '$f'..."
-	cat <<-'EOF' > "$f"
-	#!/bin/sh
+	cat <<-'EOF' >"$f"
+		#!/bin/sh
 
-	HOST_HOME=${REAL_HOME:-$HOME}
-	HOST_XDG_CONFIG_HOME=${REAL_XDG_CONFIG_HOME:-${XDG_CONFIG_HOME:-$HOST_HOME/.config}}
-	HOST_XDG_DATA_HOME=${REAL_XDG_DATA_HOME:-${XDG_DATA_HOME:-$HOST_HOME/.local/share}}
-	HOST_XDG_CACHE_HOME=${REAL_XDG_CACHE_HOME:-${XDG_CACHE_HOME:-$HOST_HOME/.cache}}
-	HOST_XDG_STATE_HOME=${REAL_XDG_STATE_HOME:-${XDG_STATE_HOME:-$HOST_HOME/.local/state}}
+		HOST_HOME=${REAL_HOME:-$HOME}
+		HOST_XDG_CONFIG_HOME=${REAL_XDG_CONFIG_HOME:-${XDG_CONFIG_HOME:-$HOST_HOME/.config}}
+		HOST_XDG_DATA_HOME=${REAL_XDG_DATA_HOME:-${XDG_DATA_HOME:-$HOST_HOME/.local/share}}
+		HOST_XDG_CACHE_HOME=${REAL_XDG_CACHE_HOME:-${XDG_CACHE_HOME:-$HOST_HOME/.cache}}
+		HOST_XDG_STATE_HOME=${REAL_XDG_STATE_HOME:-${XDG_STATE_HOME:-$HOST_HOME/.local/state}}
 
-	export HOST_HOME HOST_XDG_CONFIG_HOME HOST_XDG_DATA_HOME HOST_XDG_CACHE_HOME HOST_XDG_STATE_HOME
+		export HOST_HOME HOST_XDG_CONFIG_HOME HOST_XDG_DATA_HOME HOST_XDG_CACHE_HOME HOST_XDG_STATE_HOME
 
-	BINDIR=${XDG_BIN_HOME:-~/.local/bin}
-	DATADIR=${XDG_DATA_HOME:-~/.local/share}
-	CONFIGDIR=${XDG_CONFIG_HOME:-~/.config}
-	CACHEDIR=${XDG_CACHE_HOME:-~/.cache}
-	STATEDIR=${XDG_STATE_HOME:-~/.local/state}
+		BINDIR=${XDG_BIN_HOME:-~/.local/bin}
+		DATADIR=${XDG_DATA_HOME:-~/.local/share}
+		CONFIGDIR=${XDG_CONFIG_HOME:-~/.config}
+		CACHEDIR=${XDG_CACHE_HOME:-~/.cache}
+		STATEDIR=${XDG_STATE_HOME:-~/.local/state}
 
-	err_msg(){
-	        >&2 printf '\033[1;31m%s\033[0m\n' " $*"
-	}
+		err_msg(){
+		        >&2 printf '\033[1;31m%s\033[0m\n' " $*"
+		}
 
-	is_cmd() {
-	        if [ "$1" = '--any' ]; then
-	                shift
-	                for cmd do
-	                        if command -v "$cmd" 1>/dev/null; then
-	                                return 0
-	                        fi
-	                done
-	                return 1
-	        else
-	                for cmd do
-	                        command -v "$cmd" 1>/dev/null || return 1
-	                done
-	        fi
-	        return 0
-	}
+		is_cmd() {
+		        if [ "$1" = '--any' ]; then
+		                shift
+		                for cmd do
+		                        if command -v "$cmd" 1>/dev/null; then
+		                                return 0
+		                        fi
+		                done
+		                return 1
+		        else
+		                for cmd do
+		                        command -v "$cmd" 1>/dev/null || return 1
+		                done
+		        fi
+		        return 0
+		}
 
-	run_gui_sudo() {
-	        if   [ "$(id -u)" = 0 ];               then _sudocmd=""
-	        elif _sudocmd=$(command -v pkexec);    then :
-	        elif _sudocmd=$(command -v lxqt-sudo); then :
-	        elif _sudocmd=$(command -v run0);      then set -- --via-shell "$@"
-	        fi
-	        if [ "$1" = --check ]; then
-	                [ -n "$_sudocmd" ] || [ "$(id -u)" = 0 ] || return 1
-	                return 0
-	        else
-	                if [ -z "$_sudocmd" ] && [ "$(id -u)" != 0 ]; then
-	                        err_msg "We need 'pkexec' or 'lxqt-sudo' or 'run0' to perform this operation"
-	                        return 1
-	                fi
-	        fi
-	        $_sudocmd "$@"
-	}
+		run_gui_sudo() {
+		        if   [ "$(id -u)" = 0 ];               then _sudocmd=""
+		        elif _sudocmd=$(command -v pkexec);    then :
+		        elif _sudocmd=$(command -v lxqt-sudo); then :
+		        elif _sudocmd=$(command -v run0);      then set -- --via-shell "$@"
+		        fi
+		        if [ "$1" = --check ]; then
+		                [ -n "$_sudocmd" ] || [ "$(id -u)" = 0 ] || return 1
+		                return 0
+		        else
+		                if [ -z "$_sudocmd" ] && [ "$(id -u)" != 0 ]; then
+		                        err_msg "We need 'pkexec' or 'lxqt-sudo' or 'run0' to perform this operation"
+		                        return 1
+		                fi
+		        fi
+		        $_sudocmd "$@"
+		}
 
-	download() {
-	        if   _download_cmd=$(command -v wget); then set -- -O "$@"
-	        elif _download_cmd=$(command -v curl); then set -- -Lo "$@"
-	        else
-	                err_msg "We need 'wget' or 'curl' to download $1"
-	                return 1
-	        fi
-	        log=${TMPDIR:-/tmp}/._download.log
-	        if ! "$_download_cmd" "$@" 2>"$log"; then
-	                cat "$log"
-	                err_msg "Download failed!"
-	                return 1
-	        fi
-	        rm -f "$log"
-	}
+		download() {
+		        if   _download_cmd=$(command -v wget); then set -- -O "$@"
+		        elif _download_cmd=$(command -v curl); then set -- -Lo "$@"
+		        else
+		                err_msg "We need 'wget' or 'curl' to download $1"
+		                return 1
+		        fi
+		        log=${TMPDIR:-/tmp}/._download.log
+		        if ! "$_download_cmd" "$@" 2>"$log"; then
+		                cat "$log"
+		                err_msg "Download failed!"
+		                return 1
+		        fi
+		        rm -f "$log"
+		}
 
 
-	# the following function are used by notify
+		# the following function are used by notify
 
-	# display functions, these might return non 0 depending on user input
-	_display_info() {
-	        set -- "INFO: $*"
-	        if   is_cmd kdialog;   then kdialog --msgbox "$*"
-	        elif is_cmd qarma;     then qarma --info --text "$*"
-	        elif is_cmd yad;       then yad --info --text "$*"
-	        elif is_cmd zenity;    then zenity --info --text "$*"
-	        elif is_cmd gxmessage; then gxmessage -center "$*"
-	        elif is_cmd xmessage;  then xmessage -center "$*"
-	        else _notification=0   _display_with_host_term "$*"
-	        fi
-	}
+		# display functions, these might return non 0 depending on user input
+		_display_info() {
+		        set -- "INFO: $*"
+		        if   is_cmd kdialog;   then kdialog --msgbox "$*"
+		        elif is_cmd qarma;     then qarma --info --text "$*"
+		        elif is_cmd yad;       then yad --info --text "$*"
+		        elif is_cmd zenity;    then zenity --info --text "$*"
+		        elif is_cmd gxmessage; then gxmessage -center "$*"
+		        elif is_cmd xmessage;  then xmessage -center "$*"
+		        else _notification=0   _display_with_host_term "$*"
+		        fi
+		}
 
-	_display_error() {
-	        set -- "ERROR: $*"
-	        if   is_cmd kdialog;   then kdialog --error "$*"
-	        elif is_cmd qarma;     then qarma --error --text "$*"
-	        elif is_cmd yad;       then yad --error --text "$*"
-	        elif is_cmd zenity;    then zenity --error --text "$*"
-	        elif is_cmd gxmessage; then gxmessage -center "$*"
-	        elif is_cmd xmessage;  then xmessage -center "$*"
-	        else _notification=0   _display_with_host_term "$*"
-	        fi
-	}
+		_display_error() {
+		        set -- "ERROR: $*"
+		        if   is_cmd kdialog;   then kdialog --error "$*"
+		        elif is_cmd qarma;     then qarma --error --text "$*"
+		        elif is_cmd yad;       then yad --error --text "$*"
+		        elif is_cmd zenity;    then zenity --error --text "$*"
+		        elif is_cmd gxmessage; then gxmessage -center "$*"
+		        elif is_cmd xmessage;  then xmessage -center "$*"
+		        else _notification=0   _display_with_host_term "$*"
+		        fi
+		}
 
-	_display_warning() {
-	        set -- "WARNING: $*"
-	        if   is_cmd kdialog;   then kdialog --sorry "$*"
-	        elif is_cmd qarma;     then qarma --warning --text "$*"
-	        elif is_cmd yad;       then yad --warning --text "$*"
-	        elif is_cmd zenity;    then zenity --warning --text "$*"
-	        elif is_cmd gxmessage; then gxmessage -center "$*"
-	        elif is_cmd xmessage;  then xmessage -center "$*"
-	        else _notification=0    _display_with_host_term "$*"
-	        fi
-	}
+		_display_warning() {
+		        set -- "WARNING: $*"
+		        if   is_cmd kdialog;   then kdialog --sorry "$*"
+		        elif is_cmd qarma;     then qarma --warning --text "$*"
+		        elif is_cmd yad;       then yad --warning --text "$*"
+		        elif is_cmd zenity;    then zenity --warning --text "$*"
+		        elif is_cmd gxmessage; then gxmessage -center "$*"
+		        elif is_cmd xmessage;  then xmessage -center "$*"
+		        else _notification=0    _display_with_host_term "$*"
+		        fi
+		}
 
-	_display_question() {
-	        set -- "QUESTION: $*"
-	        if   is_cmd kdialog;   then kdialog --yesno "$*"
-	        elif is_cmd qarma;     then qarma --question --text "$*"
-	        elif is_cmd yad;       then yad --question --text "$*"
-	        elif is_cmd zenity;    then zenity --question --text "$*"
-	        elif is_cmd gxmessage; then gxmessage -center -buttons "Yes:0,No:1" "$*"
-	        elif is_cmd xmessage;  then xmessage -center -buttons "Yes:0,No:1" "$*"
-	        else _notification=0    _display_with_host_term "$*"
-	        fi
-	}
+		_display_question() {
+		        set -- "QUESTION: $*"
+		        if   is_cmd kdialog;   then kdialog --yesno "$*"
+		        elif is_cmd qarma;     then qarma --question --text "$*"
+		        elif is_cmd yad;       then yad --question --text "$*"
+		        elif is_cmd zenity;    then zenity --question --text "$*"
+		        elif is_cmd gxmessage; then gxmessage -center -buttons "Yes:0,No:1" "$*"
+		        elif is_cmd xmessage;  then xmessage -center -buttons "Yes:0,No:1" "$*"
+		        else _notification=0    _display_with_host_term "$*"
+		        fi
+		}
 
-	# notify functions, these will always return 0 unless there are no deps
-	_notify_info() {
-	        set -- "INFO: $*"
-	        if   is_cmd notify-send; then notify-send "$*" || :
-	        elif is_cmd qarma;       then qarma --info --text "$*" || :
-	        elif is_cmd kdialog;     then kdialog --passivepopup "$*" || :
-	        elif is_cmd yad;         then yad --window-type=notification --text "$*" || :
-	        elif is_cmd zenity;      then zenity --info --text "$*" || :
-	        elif is_cmd xmessage;    then xmessage -center "$*" || :
-	        elif is_cmd gxmessage;   then gxmessage -center "$*" || :
-	        else _notification=1     _display_with_host_term "$*"
-	        fi
-	}
+		# notify functions, these will always return 0 unless there are no deps
+		_notify_info() {
+		        set -- "INFO: $*"
+		        if   is_cmd notify-send; then notify-send "$*" || :
+		        elif is_cmd qarma;       then qarma --info --text "$*" || :
+		        elif is_cmd kdialog;     then kdialog --passivepopup "$*" || :
+		        elif is_cmd yad;         then yad --window-type=notification --text "$*" || :
+		        elif is_cmd zenity;      then zenity --info --text "$*" || :
+		        elif is_cmd xmessage;    then xmessage -center "$*" || :
+		        elif is_cmd gxmessage;   then gxmessage -center "$*" || :
+		        else _notification=1     _display_with_host_term "$*"
+		        fi
+		}
 
-	_notify_error() {
-	        set -- "ERROR: $*"
-	        if   is_cmd notify-send; then notify-send -u critical "$*" || :
-	        elif is_cmd kdialog;     then kdialog --error "$*" || :
-	        elif is_cmd qarma;       then qarma --error --text "$*" || :
-	        elif is_cmd yad;         then yad --window-type=notification --text "$*" || :
-	        elif is_cmd zenity;      then zenity --error --text "$*" || :
-	        elif is_cmd xmessage;    then xmessage -center "$*" || :
-	        elif is_cmd gxmessage;   then gxmessage -center "$*" || :
-	        else _notification=1     _display_with_host_term "$*"
-	        fi
-	}
+		_notify_error() {
+		        set -- "ERROR: $*"
+		        if   is_cmd notify-send; then notify-send -u critical "$*" || :
+		        elif is_cmd kdialog;     then kdialog --error "$*" || :
+		        elif is_cmd qarma;       then qarma --error --text "$*" || :
+		        elif is_cmd yad;         then yad --window-type=notification --text "$*" || :
+		        elif is_cmd zenity;      then zenity --error --text "$*" || :
+		        elif is_cmd xmessage;    then xmessage -center "$*" || :
+		        elif is_cmd gxmessage;   then gxmessage -center "$*" || :
+		        else _notification=1     _display_with_host_term "$*"
+		        fi
+		}
 
-	_notify_warning() {
-	        set -- "WARNING: $*"
-	        if   is_cmd notify-send; then notify-send -u critical "$*" || :
-	        elif is_cmd kdialog;     then kdialog --sorry "$*" || :
-	        elif is_cmd qarma;       then qarma --warning --text "$*" || :
-	        elif is_cmd yad;         then yad --window-type=notification --text "$*" || :
-	        elif is_cmd zenity;      then zenity --warning --text "$*" || :
-	        elif is_cmd gxmessage;   then gxmessage -center "$*" || :
-	        elif is_cmd xmessage;    then xmessage -center "$*" || :
-	        else _notification=1     _display_with_host_term "$*"
-	        fi
-	}
+		_notify_warning() {
+		        set -- "WARNING: $*"
+		        if   is_cmd notify-send; then notify-send -u critical "$*" || :
+		        elif is_cmd kdialog;     then kdialog --sorry "$*" || :
+		        elif is_cmd qarma;       then qarma --warning --text "$*" || :
+		        elif is_cmd yad;         then yad --window-type=notification --text "$*" || :
+		        elif is_cmd zenity;      then zenity --warning --text "$*" || :
+		        elif is_cmd gxmessage;   then gxmessage -center "$*" || :
+		        elif is_cmd xmessage;    then xmessage -center "$*" || :
+		        else _notification=1     _display_with_host_term "$*"
+		        fi
+		}
 
-	# extreme measure
-	_display_with_host_term() {
-	        _message=$*
-	        _tmpfile=${TMPDIR:-/tmp}/.${0##*/}-no-gui-fallback
+		# extreme measure
+		_display_with_host_term() {
+		        _message=$*
+		        _tmpfile=${TMPDIR:-/tmp}/.${0##*/}-no-gui-fallback
 
-	        cmd_notification="echo '$_message'; read yn"
-	        cmd_display="
-	                trap 'echo 0 > \"$_tmpfile\"; exit' HUP TERM
-	                echo '$_message'
-	                printf '\n%s''   (Yes/No)?: ';
-	                while :; do
-	                        read yn
-	                        case \$yn in
-	                                Y*|y*) echo 1 > '$_tmpfile'; break;;
-	                                N*|n*) echo 0 > '$_tmpfile'; break;;
-	                                *)     echo 'Please type Yes or No' ;;
-	                        esac
-	                done
-	        "
+		        cmd_notification="echo '$_message'; read yn"
+		        cmd_display="
+		                trap 'echo 0 > \"$_tmpfile\"; exit' HUP TERM
+		                echo '$_message'
+		                printf '\n%s''   (Yes/No)?: ';
+		                while :; do
+		                        read yn
+		                        case \$yn in
+		                                Y*|y*) echo 1 > '$_tmpfile'; break;;
+		                                N*|n*) echo 0 > '$_tmpfile'; break;;
+		                                *)     echo 'Please type Yes or No' ;;
+		                        esac
+		                done
+		        "
 
-	        if [ "$_notification" = 1 ]; then
-	                tcmd="$cmd_notification"
-	        else
-	                tcmd="$cmd_display"
-	        fi
+		        if [ "$_notification" = 1 ]; then
+		                tcmd="$cmd_notification"
+		        else
+		                tcmd="$cmd_display"
+		        fi
 
-	        # normal terminals
-	        if   is_cmd alacritty;  then alacritty  -e sh -c "$tcmd" &
-	        elif is_cmd wezterm;    then wezterm    -e sh -c "$tcmd" &
-	        elif is_cmd konsole;    then konsole    -e sh -c "$tcmd" &
-	        elif is_cmd lxterminal; then lxterminal -e sh -c "$tcmd" &
-	        elif is_cmd kitty;      then kitty      -e sh -c "$tcmd" &
-	        elif is_cmd urxvt;      then urxvt      -e sh -c "$tcmd" &
-	        elif is_cmd xterm;      then xterm      -e sh -c "$tcmd" &
-	        # mmmm
-	        elif is_cmd gnome-terminal; then gnome-terminal -- sh -c "$tcmd" &
-	        # these need extra quotes for some reason
-	        elif is_cmd ptyxis;         then ptyxis         -x "sh -c \"$tcmd\"" &
-	        elif is_cmd qterminal;      then qterminal      -e "sh -c \"$tcmd\"" &
-	        elif is_cmd mate-terminal;  then mate-terminal  -e "sh -c \"$tcmd\"" &
-	        elif is_cmd xfce4-terminal; then xfce4-terminal -e "sh -c \"$tcmd\"" &
-	        else
-	                err_msg "Cannot find suitable binary to perform operation!"
-	                return 127
-	        fi
+		        # normal terminals
+		        if   is_cmd alacritty;  then alacritty  -e sh -c "$tcmd" &
+		        elif is_cmd wezterm;    then wezterm    -e sh -c "$tcmd" &
+		        elif is_cmd konsole;    then konsole    -e sh -c "$tcmd" &
+		        elif is_cmd lxterminal; then lxterminal -e sh -c "$tcmd" &
+		        elif is_cmd kitty;      then kitty      -e sh -c "$tcmd" &
+		        elif is_cmd urxvt;      then urxvt      -e sh -c "$tcmd" &
+		        elif is_cmd xterm;      then xterm      -e sh -c "$tcmd" &
+		        # mmmm
+		        elif is_cmd gnome-terminal; then gnome-terminal -- sh -c "$tcmd" &
+		        # these need extra quotes for some reason
+		        elif is_cmd ptyxis;         then ptyxis         -x "sh -c \"$tcmd\"" &
+		        elif is_cmd qterminal;      then qterminal      -e "sh -c \"$tcmd\"" &
+		        elif is_cmd mate-terminal;  then mate-terminal  -e "sh -c \"$tcmd\"" &
+		        elif is_cmd xfce4-terminal; then xfce4-terminal -e "sh -c \"$tcmd\"" &
+		        else
+		                err_msg "Cannot find suitable binary to perform operation!"
+		                return 127
+		        fi
 
-	        if [ "$_notification" = 1 ]; then
-	                return 0
-	        fi
+		        if [ "$_notification" = 1 ]; then
+		                return 0
+		        fi
 
-	        _elapsed=0
-	        _timeout=150  # 15 seconds
-	        while :; do
-	                if [ -f "$_tmpfile" ] || [ "$_elapsed" -ge "$_timeout" ]; then
-	                        break
-	                fi
-	                sleep 0.1
-	                _elapsed=$(( _elapsed + 1 ))
-	        done
+		        _elapsed=0
+		        _timeout=150  # 15 seconds
+		        while :; do
+		                if [ -f "$_tmpfile" ] || [ "$_elapsed" -ge "$_timeout" ]; then
+		                        break
+		                fi
+		                sleep 0.1
+		                _elapsed=$(( _elapsed + 1 ))
+		        done
 
-	        read -r _reply < "$_tmpfile"
-	        rm -f "$_tmpfile"
+		        read -r _reply < "$_tmpfile"
+		        rm -f "$_tmpfile"
 
-	        if [ "$_reply" = "1" ]; then
-	                return 0
-	        else
-	                return 1
-	        fi
-	}
+		        if [ "$_reply" = "1" ]; then
+		                return 0
+		        else
+		                return 1
+		        fi
+		}
 
-	notify() {
-	        case "$1" in
-	                --display-info|-di)     shift; _display_info     "$@";;
-	                --display-error|-de)    shift; _display_error    "$@";;
-	                --display-warning|-dw)  shift; _display_warning  "$@";;
-	                --display-question|-dq) shift; _display_question "$@";;
-	                --notify-info|-ni)      shift; _notify_info      "$@";;
-	                --notify-error|-ne)     shift; _notify_error     "$@";;
-	                --notify-warning|-nw)   shift; _notify_warning   "$@";;
-	                # act as notify-send ARG wrapper when no flag is given
-	                *) _notify_info "$@";;
-	        esac
-	}
+		notify() {
+		        case "$1" in
+		                --display-info|-di)     shift; _display_info     "$@";;
+		                --display-error|-de)    shift; _display_error    "$@";;
+		                --display-warning|-dw)  shift; _display_warning  "$@";;
+		                --display-question|-dq) shift; _display_question "$@";;
+		                --notify-info|-ni)      shift; _notify_info      "$@";;
+		                --notify-error|-ne)     shift; _notify_error     "$@";;
+		                --notify-warning|-nw)   shift; _notify_warning   "$@";;
+		                # act as notify-send ARG wrapper when no flag is given
+		                *) _notify_info "$@";;
+		        esac
+		}
 	EOF
 	chmod +x "$f"
 	_echo "* Added $f"
@@ -2475,13 +2477,13 @@ _check_main_bin() {
 		MAIN_BIN=$(awk -F'=| ' '/^Exec=/{print $2; exit}' "$DESKTOP_ENTRY" | tr -d "\"'")
 		MAIN_BIN=${MAIN_BIN##*/}
 		case "$MAIN_BIN" in
-			env|sh|bash)
-				_err_msg "Main binary is '$MAIN_BIN', it is unlikely you"
-				_err_msg "are actually going to package '$MAIN_BIN'"
-				_err_msg "as an appimage, bailing out..."
-				_err_msg "set MAIN_BIN=$MAIN_BIN if you want to do this."
-				exit 1
-				;;
+		env | sh | bash)
+			_err_msg "Main binary is '$MAIN_BIN', it is unlikely you"
+			_err_msg "are actually going to package '$MAIN_BIN'"
+			_err_msg "as an appimage, bailing out..."
+			_err_msg "set MAIN_BIN=$MAIN_BIN if you want to do this."
+			exit 1
+			;;
 		esac
 	fi
 
@@ -2499,7 +2501,8 @@ _check_main_bin() {
 
 _make_static_bin() (
 	DST_DIR="$APPDIR"/bin
-	while :; do case "$1" in
+	while :; do
+		case "$1" in
 		--dst-dir)
 			DST_DIR="$2"
 			shift
@@ -2524,10 +2527,10 @@ _make_static_bin() (
 	_echo "------------------------------------------------------------"
 	mkdir -p "$DST_DIR"
 	export DST_DIR
-	for b do
+	for b; do
 		_echo "Packing $b as a static binary..."
 		$XVFB_CMD "$TMPDIR"/sharun-aio l \
-			--with-wrappe            \
+			--with-wrappe \
 			--wrappe-exec "${b##*/}" \
 			"$b" || :
 	done
@@ -2568,7 +2571,7 @@ _make_appimage() {
 
 	if [ "$DEVEL_RELEASE" = 1 ]; then
 		if ! grep -q '^Name=.*Nightly' "$DESKTOP_ENTRY"; then
-			>&2 echo "Adding Nightly to desktop entry name"
+			echo >&2 "Adding Nightly to desktop entry name"
 			sed -i -e 's/^\(Name=.*\)$/\1 Nightly/' "$DESKTOP_ENTRY"
 		fi
 		# also change UPINFO to use nightly tag
@@ -2612,29 +2615,29 @@ _make_appimage() {
 }
 
 case "$1" in
-	--help)
-		_help_msg
-		;;
-	--make-appimage)
-		_make_appimage
-		;;
-	--test)
-		shift
-		_test_appimage "$@"
-		;;
-	--simple-test)
-		shift
-		_simple_test_appimage "$@"
-		;;
-	--make-static-bin)
-		shift
-		_get_sharun
-		_make_static_bin "$@"
-		exit 0
-		;;
-	'')
-		_help_msg
-		;;
+--help)
+	_help_msg
+	;;
+--make-appimage)
+	_make_appimage
+	;;
+--test)
+	shift
+	_test_appimage "$@"
+	;;
+--simple-test)
+	shift
+	_simple_test_appimage "$@"
+	;;
+--make-static-bin)
+	shift
+	_get_sharun
+	_make_static_bin "$@"
+	exit 0
+	;;
+'')
+	_help_msg
+	;;
 esac
 
 _sanity_check
@@ -2677,17 +2680,18 @@ _echo "------------------------------------------------------------"
 echo ""
 
 set -- \
-	"$DST_LIB_DIR"/*.so*       \
-	"$DST_LIB_DIR"/*/*.so*     \
-	"$DST_LIB_DIR"/*/*/*.so*   \
+	"$DST_LIB_DIR"/*.so* \
+	"$DST_LIB_DIR"/*/*.so* \
+	"$DST_LIB_DIR"/*/*/*.so* \
 	"$DST_LIB_DIR"/*/*/*/*.so*
 
-for lib do case "$lib" in
+for lib; do
+	case "$lib" in
 	*libgegl*)
 		# GEGL_PATH is problematic so we avoiud it
 		# patch the lib directly to load its plugins instead
 		_patch_away_usr_lib_dir "$lib" || continue
-		echo 'unset GEGL_PATH' >> "$APPENV"
+		echo 'unset GEGL_PATH' >>"$APPENV"
 		;;
 	*libp11-kit.so*)
 		_patch_away_usr_lib_dir "$lib" || :
@@ -2737,15 +2741,15 @@ for lib do case "$lib" in
 			cp -v "$src_mangohud_layer" "$dst_mangohud_layer"
 			sed -i 's|/.*/mangohud/||' "$dst_mangohud_layer"
 
-			if [ ! -f "$APPDIR"/bin/mangohud ] \
-				&& command -v mangohud 1>/dev/null; then
+			if [ ! -f "$APPDIR"/bin/mangohud ] &&
+				command -v mangohud 1>/dev/null; then
 				cp -v "$(command -v mangohud)" "$APPDIR"/bin
 			fi
 
 			sed -i \
-				-e 's|/usr/.*/||'                         \
-				-e '1a\export SHARUN_ALLOW_LD_PRELOAD=1'  \
-				-e 's|#!.*|#!/bin/sh|'                    \
+				-e 's|/usr/.*/||' \
+				-e '1a\export SHARUN_ALLOW_LD_PRELOAD=1' \
+				-e 's|#!.*|#!/bin/sh|' \
 				"$APPDIR"/bin/mangohud || :
 
 			_echo "Copied over mangohud layer and patched mangohud"
@@ -2773,9 +2777,9 @@ for lib do case "$lib" in
 		;;
 	*libSDL*.so*)
 		# make sure SDL does not attempt to use pipewire when not deployed
-		if [ "$DEPLOY_PIPEWIRE" != 1 ] \
-		  && ! grep -q 'SDL_AUDIODRIVER=' "$APPENV" 2>/dev/null; then
-			echo 'SDL_AUDIODRIVER=pulseaudio' >> "$APPENV"
+		if [ "$DEPLOY_PIPEWIRE" != 1 ] &&
+			! grep -q 'SDL_AUDIODRIVER=' "$APPENV" 2>/dev/null; then
+			echo 'SDL_AUDIODRIVER=pulseaudio' >>"$APPENV"
 		fi
 
 		# SDL may be bundled without libdecor since it maybe missing from the CI runner
@@ -2808,7 +2812,7 @@ _check_hardcoded_data_dirs
 
 # patch away any hardcoded path to /usr/share or /usr/lib in bins...
 set -- "$APPDIR"/shared/bin/*
-for bin do
+for bin; do
 	if p=$(grep -ao -m 1 '/usr/share/.*/' "$bin"); then
 		_echo "* Detected hardcoded path to $p in $bin"
 		_patch_away_usr_share_dir "$bin" || :
@@ -2838,7 +2842,7 @@ if [ -n "$ADD_HOOKS" ]; then
 	set -- $ADD_HOOKS
 	IFS="$old_ifs"
 	hook_dst="$APPDIR"/bin
-	for hook do
+	for hook; do
 		# hooks used to be executed differently depending on the suffix
 		# this was dropped and now all hooks are sourced
 		# remove old suffixes so that we don't break existing scripts
@@ -2880,38 +2884,38 @@ done
 while read -r d; do
 	if [ -d "$d" ]; then
 		case "$d" in
-			"$LIB_DIR"/*)
-				if [ "$LIB32" = 1 ]; then
-					dst_path="$APPDIR"/lib32/"${d##*$LIB_DIR/}"
-				else
-					dst_path="$APPDIR"/lib/"${d##*$LIB_DIR/}"
-				fi
-				;;
-			*/share/*)
-				dst_path="$APPDIR"/share/"${d##*/share/}"
-				;;
-			*/etc/*)
-				dst_path="$APPDIR"/etc/"${d##*/etc/}"
-				;;
-			*/lib/*)
-				dst_path="$APPDIR"/lib/"${d##*/lib/}"
-				;;
-			*/lib32/*)
-				dst_path="$APPDIR"/lib32/"${d##*/lib32/}"
-				;;
-			"$APPDIR"/*|./"${APPDIR##*/}"/*|"${APPDIR##*/}"/*)
-				_err_msg "Skipping deployment of $d (already in '$APPDIR')"
-				continue
-				;;
-			*)
-				_err_msg "Skipping deployment of $d"
-				_err_msg "Valid directories to deploy are:"
-				_err_msg "Any dir from: $LIB_DIR"
-				_err_msg "Any dir with /lib/ in its path"
-				_err_msg "Any dir with /share/ in its path"
-				_err_msg "Any dir with /etc/ in its path"
-				continue
-				;;
+		"$LIB_DIR"/*)
+			if [ "$LIB32" = 1 ]; then
+				dst_path="$APPDIR"/lib32/"${d##*$LIB_DIR/}"
+			else
+				dst_path="$APPDIR"/lib/"${d##*$LIB_DIR/}"
+			fi
+			;;
+		*/share/*)
+			dst_path="$APPDIR"/share/"${d##*/share/}"
+			;;
+		*/etc/*)
+			dst_path="$APPDIR"/etc/"${d##*/etc/}"
+			;;
+		*/lib/*)
+			dst_path="$APPDIR"/lib/"${d##*/lib/}"
+			;;
+		*/lib32/*)
+			dst_path="$APPDIR"/lib32/"${d##*/lib32/}"
+			;;
+		"$APPDIR"/* | ./"${APPDIR##*/}"/* | "${APPDIR##*/}"/*)
+			_err_msg "Skipping deployment of $d (already in '$APPDIR')"
+			continue
+			;;
+		*)
+			_err_msg "Skipping deployment of $d"
+			_err_msg "Valid directories to deploy are:"
+			_err_msg "Any dir from: $LIB_DIR"
+			_err_msg "Any dir with /lib/ in its path"
+			_err_msg "Any dir with /share/ in its path"
+			_err_msg "Any dir with /etc/ in its path"
+			continue
+			;;
 		esac
 		mkdir -p "${dst_path%/*}"
 		if cp -Lrn "$d"/. "$dst_path"; then
@@ -2926,13 +2930,13 @@ while read -r d; do
 		fi
 	fi
 done <<-EOF
-$ADD_DIR
+	$ADD_DIR
 EOF
 
 _handle_nested_bins
 
 if [ -n "$ANYLINUX_DO_NOT_LOAD_LIBS" ]; then
-	echo "ANYLINUX_DO_NOT_LOAD_LIBS=$ANYLINUX_DO_NOT_LOAD_LIBS:\${ANYLINUX_DO_NOT_LOAD_LIBS}" >> "$APPENV"
+	echo "ANYLINUX_DO_NOT_LOAD_LIBS=$ANYLINUX_DO_NOT_LOAD_LIBS:\${ANYLINUX_DO_NOT_LOAD_LIBS}" >>"$APPENV"
 fi
 
 # check if we have libjack.so in the AppImage, jack needs matching

@@ -20,19 +20,19 @@ set -e
 _find_host_libdecor_plugins_dir() {
 	# We only want to do this in GNOME Wayland, so check first
 	case "$XDG_CURRENT_DESKTOP" in
-		*GNOME*|*gnome*|*Gnome*) :;;
-		*) return 0;;
+	*GNOME* | *gnome* | *Gnome*) : ;;
+	*) return 0 ;;
 	esac
 	case "$XDG_SESSION_TYPE" in
-		*Wayland*|*wayland*|*WAYLAND*) :;;
-		*) return 0;;
+	*Wayland* | *wayland* | *WAYLAND*) : ;;
+	*) return 0 ;;
 	esac
 	set -- \
-	  /usr/lib/"$APPIMAGE_ARCH"-linux-gnu/libdecor/plugins-* \
-	  /usr/lib64/libdecor/plugins-* \
-	  /usr/lib/libdecor/plugins-* \
-	  /nix/store/*/lib/libdecor/plugins-*
-	for d do
+		/usr/lib/"$APPIMAGE_ARCH"-linux-gnu/libdecor/plugins-* \
+		/usr/lib64/libdecor/plugins-* \
+		/usr/lib/libdecor/plugins-* \
+		/nix/store/*/lib/libdecor/plugins-*
+	for d; do
 		if [ -d "$d" ]; then
 			export LIBDECOR_PLUGIN_DIR="$d"
 			break

@@ -42,10 +42,10 @@ _is_rule_already_installed() {
 
 	# check if it is already installed on the host, check in multiple
 	# places since they could be installed by distro or other means
-	for f do
-		if [ -f /etc/udev/rules.d/"${f##*/}" ] \
-		  || [ -f /usr/lib/udev/rules.d/"${f##*/}" ] \
-		  || [ -f /usr/local/lib/udev/rules.d/"${f##*/}" ]; then
+	for f; do
+		if [ -f /etc/udev/rules.d/"${f##*/}" ] ||
+			[ -f /usr/lib/udev/rules.d/"${f##*/}" ] ||
+			[ -f /usr/local/lib/udev/rules.d/"${f##*/}" ]; then
 			shift
 		fi
 	done
@@ -82,7 +82,7 @@ install_udev_rules() {
 	else
 		if notify -dq "Do you wish to not see this message again?"; then
 			mkdir -p "$CACHEDIR"
-			:> "$_disable_udev"
+			: >"$_disable_udev"
 		fi
 	fi
 }

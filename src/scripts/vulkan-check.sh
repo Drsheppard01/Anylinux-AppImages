@@ -68,8 +68,8 @@ _check_vulkan_json_path() (
 					mkdir -p "$explicit_dir"
 					# sed -i is not POSIX
 					__tmp_sed=$(sed "s|\$LIB|$p|" "$f")
-					echo "$__tmp_sed" > "$explicit_dir"/"${f##*/}"
-					>&2 echo "vulkan-check: Handled \$LIB path in $f"
+					echo "$__tmp_sed" >"$explicit_dir"/"${f##*/}"
+					echo >&2 "vulkan-check: Handled \$LIB path in $f"
 					break
 				fi
 			done
@@ -84,8 +84,8 @@ _check_vulkan_json_path() (
 					mkdir -p "$implicit_dir"
 					# sed -i is not POSIX
 					__tmp_sed=$(sed "s|\$LIB|$p|" "$f")
-					echo "$__tmp_sed" > "$implicit_dir"/"${f##*/}"
-					>&2 echo "vulkan-check: Handled \$LIB path in $f"
+					echo "$__tmp_sed" >"$implicit_dir"/"${f##*/}"
+					echo >&2 "vulkan-check: Handled \$LIB path in $f"
 					break
 				fi
 			done
@@ -133,11 +133,11 @@ _start_virtualization() {
 
 	# TODO: Improve this check, this is only a problem that affects the amdgpu ddx
 	case "$XDG_SESSION_TYPE" in
-		x11|X11) export LIBGL_KOPPER_DRI2=1;;
+	x11 | X11) export LIBGL_KOPPER_DRI2=1 ;;
 	esac
 }
 
 if [ "$ENABLE_VIRTUALIZATION_THIS_IS_EXPERIMENTAL_KEK" = 1 ]; then
-	>&2 echo "Starting virtualization"
+	echo >&2 "Starting virtualization"
 	_start_virtualization || :
 fi

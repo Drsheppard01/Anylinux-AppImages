@@ -23,21 +23,21 @@ export PATH_MAPPING='
 '
 
 pacman -Syu --noconfirm \
-	base-devel       \
-	curl             \
-	git              \
-	libxcb           \
-	libxcursor       \
-	libxi            \
-	libxkbcommon     \
+	base-devel \
+	curl \
+	git \
+	libxcb \
+	libxcursor \
+	libxi \
+	libxkbcommon \
 	libxkbcommon-x11 \
-	libxrandr        \
-	libxtst          \
-	mesa-utils       \
-	vkmark           \
-	vulkan-tools     \
-	wget             \
-	xcb-util-wm      \
+	libxrandr \
+	libxtst \
+	mesa-utils \
+	vkmark \
+	vulkan-tools \
+	wget \
+	xcb-util-wm \
 	xorg-server-xvfb \
 	zsync
 

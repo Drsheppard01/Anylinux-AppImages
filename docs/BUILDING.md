@@ -5,11 +5,11 @@ title: BUILDING
 
 # How to make truly portable AppImages that work on any linux system
 
------------------------------------
+---
 
 ## Index
 
------------------------------------
+---
 
 - [Quick Start Guide](#quick-start-guide)
   - [Prerequisites](#prerequisites)
@@ -26,19 +26,19 @@ title: BUILDING
   - [What about nvidia?](#what-about-nvidia)
 - [Examples and templates](#examples-and-templates)
 
------------------------------------
+---
 
-## *Quick Start Guide*
+## _Quick Start Guide_
 
 **TL;DR:** Use `quick-sharun.sh` to bundle your application with all its dependencies into a truly portable AppImage that works on any Linux system.
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *Prerequisites*
+### _Prerequisites_
 
 You'll need:
 
@@ -46,13 +46,13 @@ You'll need:
 - Basic shell scripting knowledge
 - The application you want to package (very preferably installed to /usr)
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *Basic workflow*
+### _Basic workflow_
 
 Creating an AppImage with quick-sharun involves these steps:
 
@@ -67,13 +67,13 @@ That's it! The script will:
 - Detect and bundle all required libraries (including those that are dlopened)
 - Create a portable AppImage that works everywhere
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *Step-by-step example*
+### _Step-by-step example_
 
 Let's create an AppImage for a simple application. Here's a minimal example:
 
@@ -119,18 +119,18 @@ chmod +x ./get-debloated-pkgs.sh
 ./get-debloated-pkgs.sh --add-common --prefer-nano ffmpeg-mini intel-media-driver-mini
 ```
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *Configurable environment variables*
+### _Configurable environment variables_
 
 **Basic configuration:**
 
-- `APPDIR`  - Where to build the AppDir (default: `$PWD/AppDir`).
-- `ICON`    - Path to application icon.
+- `APPDIR` - Where to build the AppDir (default: `$PWD/AppDir`).
+- `ICON` - Path to application icon.
 - `DESKTOP` - Path to .desktop file.
 - `OUTPATH` - Where to save the AppImage (default: `$PWD`).
 - `OUTNAME` - Name of the output AppImage file. If not set the name from the `.desktop` file is used.
@@ -147,34 +147,34 @@ All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook
 
 **Deployment options:**
 
-- `DEPLOY_OPENGL=1`   - Bundles OpenGL libraries (mesa). Enabled automatically in most cases.
-- `DEPLOY_VULKAN=1`   - Bundles Vulkan libraries (mesa). Enabled automatically in most cases.
-- `DEPLOY_PYTHON=1`   - Bundles the system Python installation (default: disabled).
-- `DEPLOY_LOCALE=1`   - Deploys locale files (default: enabled).
-- `ANYLINUX_LIB=1`    - Preloads library that fixes several common issues that affect AppImage (default: enabled).
-- `GTK_CLASS_FIX=1`   - Bundles a small shim that fixes the WM_CLASS for GTK apps (default: disabled).
+- `DEPLOY_OPENGL=1` - Bundles OpenGL libraries (mesa). Enabled automatically in most cases.
+- `DEPLOY_VULKAN=1` - Bundles Vulkan libraries (mesa). Enabled automatically in most cases.
+- `DEPLOY_PYTHON=1` - Bundles the system Python installation (default: disabled).
+- `DEPLOY_LOCALE=1` - Deploys locale files (default: enabled).
+- `ANYLINUX_LIB=1` - Preloads library that fixes several common issues that affect AppImage (default: enabled).
+- `GTK_CLASS_FIX=1` - Bundles a small shim that fixes the WM_CLASS for GTK apps (default: disabled).
 - `OPTIMIZE_LAUNCH=1` - Speeds up AppImage launch time using a DWARFS profile image (default: disabled). This is very similar to PGO optimizations in compilers. You often do not need to enable this, since DWARFS on its own is many times faster than SquashFS. In many cases, launch times are near-identical to those of native applications (±300 ms on a system with a 2016 CPU).
 - `STRACE_MODE=1` - Uses strace to find dynamically loaded libraries (default: enabled)
 - `STRIP=1` - Strips debug symbols to reduce size (default: enabled unless `NO_STRIP` is set)
 - `DEBLOAT_LOCALE=1` - Removes unneeded locale files to reduce size (default: enabled)
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-## *Understanding the approach*
+## _Understanding the approach_
 
 This section explains the technical details and philosophy behind these AppImages. If you just want to create AppImages, the [Quick Start Guide](#quick-start-guide) above is all you need.
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *The problem*
+### _The problem_
 
 For a long time the suggested practice to make AppImages has been to bundle most of the libraries an application needs but not all like libc, dynamic linker, and several more mentioned in the [exclude list](https://github.com/AppImageCommunity/pkg2appimage/blob/master/excludelist)
 
@@ -186,13 +186,13 @@ This approach has two big issues:
 
 And the future stability isn't that great either, because glibc still sometimes breaks userspace with updates.
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *The solution*
+### _The solution_
 
 - ~~Lets use a container~~ ❌ nope that has a bunch of limitations and weird quirks, [very bloated](https://imgur.com/a/appimage-vs-flatpak-size-comparison-QH1dPyb) and depends on unprivileged user-namespaces [which you cannot even rely on...](https://github.com/linuxmint/mint22-beta/issues/82). It's worth adding that there are some cases where containers are really the only viable option, especially with applications that depend on both 32 and 64 bit libs, in which doing this without a container is going to be a lot of pain, but yeah, always leave this as a last resort method.
 
@@ -202,13 +202,13 @@ And the future stability isn't that great either, because glibc still sometimes 
 
 This is the solution, truly portable application bundles that have everything they need.
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *How does it work?*
+### _How does it work?_
 
 **Note:** This section explains the technical implementation details. The `quick-sharun` script and `sharun` tool handle all of this automatically, so you don't need to do any of this manually. This is here for educational purposes.
 
@@ -239,13 +239,13 @@ Now that we have our own dynamic linker, how do we tell it that we can to use al
 
 - Tell the dynamic linker to use our bundled libraries directly ✅ This is not well known, but the dynamic linker supports the `--library-path` flag, which behaves very similar to `LD_LIBRARY_PATH` without being a variable that gets inherited by other processes. It is the perfect solution we just needed, so our `AppRun` example will now look like this:
 
- ```shell
+```shell
 #!/bin/sh
 CURRENTDIR="$(readlink -f "$(dirname "$0")")"
 
 exec "$CURRENTDIR"/ld-linux-x86-64.so.2 \
- --library-path "$CURRENTDIR"/lib \
- "$CURRENTDIR"/bin/app "$@"
+--library-path "$CURRENTDIR"/lib \
+"$CURRENTDIR"/bin/app "$@"
 ```
 
 We need to bundle the libraries and dynamic linker and we are **almost** good to go! However, to be fully ready, we need to fix the following issues below… **Bundling all the needed libraries isn't as easy as just running `ldd` + `cp`**, so we need some more robust solution. Sharun handles this automatically (see below).
@@ -276,13 +276,13 @@ But isn't this a lot of work to find and set all the env variables that my appli
 
 4. Fourth issue to overcome, I don't want to do any of this that's a lot of work.
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *Sharun*
+### _Sharun_
 
 There is a solution for this, made by @VHSGunzo called sharun:
 
@@ -292,7 +292,7 @@ There is a solution for this, made by @VHSGunzo called sharun:
 
 - sharun also detects and sets a ton of [env variables](https://github.com/VHSgunzo/sharun?tab=readme-ov-file#environment-variables-that-are-set-if-sharun-finds-a-directory-or-file.) that the application needs to work.
 
-- it also fixes the issue of  `/proc/self/exe` being `ld-linux-x86-64.so.2` 👀 For this issue, what it does is it places all the shared libraries and binaries in `shared/{lib,bin}` and then hardlinks itself to the `bin` directory of our `AppDir`; then when you call `bin/app`, it automatically calls the bundled dynamic linker and runs the binary with the name of the hardlink, while giving the path to our bundled libraries with `--library-path`
+- it also fixes the issue of `/proc/self/exe` being `ld-linux-x86-64.so.2` 👀 For this issue, what it does is it places all the shared libraries and binaries in `shared/{lib,bin}` and then hardlinks itself to the `bin` directory of our `AppDir`; then when you call `bin/app`, it automatically calls the bundled dynamic linker and runs the binary with the name of the hardlink, while giving the path to our bundled libraries with `--library-path`
 
 - sharun also doubles as the `AppRun` and additional env variables can be added by making a `.env` file next to it, **this means we no longer depend on the host shell to get our application to launch.**
 
@@ -302,17 +302,17 @@ There is a solution for this, made by @VHSGunzo called sharun:
 
 Any application made with sharun ends up being able to work **on any linux distro**, be it ubuntu 14.04, musl distros and even directly in NixOS without any wrapper (non FHS environment).
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-## *Further considerations*
+## _Further considerations_
 
------------------------------------
+---
 
-### *Isn't this very bloated?*
+### _Isn't this very bloated?_
 
 Not really, if your application isn't hardware accelerated, bundling all the libraries will usually only increase the size of the application by less than 6 MiB.
 
@@ -346,15 +346,15 @@ When for most applications you only need llvm to support AMDGPU and X86/AArch64.
 
 We already make such version of llvm here: <https://github.com/pkgforge-dev/archlinux-pkgs-debloated> which reduces the size of libLLVM.so down to 66 MiB.
 
-Such package and other debloated packages we have are used by [Goverlay](https://github.com/benjamimgois/goverlay), which results a **50 MiB** AppImage that works on any Linux system, which is surprisingly small considering this application bundles **Qt** and **mesa**  (vulkan) among other things.
+Such package and other debloated packages we have are used by [Goverlay](https://github.com/benjamimgois/goverlay), which results a **50 MiB** AppImage that works on any Linux system, which is surprisingly small considering this application bundles **Qt** and **mesa** (vulkan) among other things.
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-### *What about nvidia?*
+### _What about nvidia?_
 
 Nvidia releases its proprietary driver as a binary blob that is already widely compatible on its own, it's only requirement is a new enough version of glibc, which the appimages made here will do as long as you build them on a glibc distro. Then you just need to add the nvidia icds to `VK_DRIVER_FILES` to be able to use it without problem.
 
@@ -362,13 +362,13 @@ If you don't have the proprietary nvidia driver, mesa already includes nouveau s
 
 Goes without saying that sharun handles all of this already on its own.
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---
 
-## *Examples and templates*
+## _Examples and templates_
 
 ### Demo examples
 
@@ -392,8 +392,8 @@ Browse through our production AppImage repositories for more complex examples:
 - [See all AppImages](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/README.md#applications)
 - **[And our template that greatly simplifies this!](https://github.com/pkgforge-dev/TEMPLATE-AppImage)**
 
------------------------------------
+---
 
 ### [Back to Index](#index)
 
------------------------------------
+---

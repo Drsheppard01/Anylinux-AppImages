@@ -25,22 +25,22 @@ export PATH_MAPPING='
 '
 
 pacman -Syu --noconfirm \
-	base-devel       \
-	curl             \
-	git              \
-	libxcb           \
-	libxcursor       \
-	libxi            \
-	libxkbcommon     \
+	base-devel \
+	curl \
+	git \
+	libxcb \
+	libxcursor \
+	libxi \
+	libxkbcommon \
 	libxkbcommon-x11 \
-	libxrandr        \
-	libxtst          \
-	mesa-utils       \
-	vkmark           \
-	vulkan-tools     \
-	wget             \
+	libxrandr \
+	libxtst \
+	mesa-utils \
+	vkmark \
+	vulkan-tools \
+	wget \
 	xorg-server-xvfb \
-	xcb-util-wm      \
+	xcb-util-wm \
 	zsync
 
 echo "Installing debloated packages..."

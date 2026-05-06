@@ -76,7 +76,7 @@ _fix_userns() {
 _do_not_ask_again() {
 	if notify -dq "Do you wish to not see this message again?"; then
 		mkdir -p "$CACHEDIR"
-		:> "$_disable_namespace_check"
+		: >"$_disable_namespace_check"
 	fi
 }
 
@@ -87,4 +87,3 @@ check_and_fix_userns() {
 }
 
 check_and_fix_userns || :
-

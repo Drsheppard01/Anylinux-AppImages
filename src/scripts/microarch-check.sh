@@ -9,38 +9,44 @@ v3check() {
 		v3cpu=0
 		while IFS= read -r line; do
 			case "$line" in
-				*fma*|*FMA*) v3cpu=1; break;;
+			*fma* | *FMA*)
+				v3cpu=1
+				break
+				;;
 			esac
-	done </proc/cpuinfo
+		done </proc/cpuinfo
 
-	if [ "$v3cpu" != 1 ]; then
-		err_msg ""
-		err_msg "============================================================"
-		err_msg ""
-		err_msg "UNSUPPORTED CPU! You need a cpu that supports x86-64-v3!"
-		err_msg ""
-		err_msg "============================================================"
-		err_msg ""
-	fi
+		if [ "$v3cpu" != 1 ]; then
+			err_msg ""
+			err_msg "============================================================"
+			err_msg ""
+			err_msg "UNSUPPORTED CPU! You need a cpu that supports x86-64-v3!"
+			err_msg ""
+			err_msg "============================================================"
+			err_msg ""
+		fi
 	fi
 }
 v4check() {
 	if [ "$APPIMAGE_ARCH" = 'x86_64' ] && [ -r /proc/cpuinfo ]; then
-	v4cpu=0
-	while IFS= read -r line; do
-		case "$line" in
-			*avx512*|*AVX512*) v4cpu=1; break;;
-		esac
-	done </proc/cpuinfo
+		v4cpu=0
+		while IFS= read -r line; do
+			case "$line" in
+			*avx512* | *AVX512*)
+				v4cpu=1
+				break
+				;;
+			esac
+		done </proc/cpuinfo
 
-	if [ "$v4cpu" != 1 ]; then
-		err_msg ""
-		err_msg "============================================================"
-		err_msg ""
-		err_msg "UNSUPPORTED CPU! You need a cpu that supports x86-64-v4!"
-		err_msg ""
-		err_msg "============================================================"
-		err_msg ""
+		if [ "$v4cpu" != 1 ]; then
+			err_msg ""
+			err_msg "============================================================"
+			err_msg ""
+			err_msg "UNSUPPORTED CPU! You need a cpu that supports x86-64-v4!"
+			err_msg ""
+			err_msg "============================================================"
+			err_msg ""
+		fi
 	fi
-fi
 }

@@ -6,26 +6,27 @@ title: Disk usage vs Flatpak
 <div align="center" markdown="1">
 
 # Flatpak vs Anylinux-AppImages
+
 # Disk usage comparison with 20 apps
 
 </div>
 
 | Format | Requirements |
 | --- | --- |
-| Flatpak | **Hard dependency on bubblewrap and FUSE**. Must be supported by your distribution or be manually built and installed systemwide which requires elevated rights. |
+| Flatpak | **Hard dependency on bubblewrap and FUSE**. Must be supported by your distribution or be manually built and installed systemwide which requires elevated rights.  |
 | Snap | Similar requirements to Flatpak minus bubblewrap, has a **hard dependency on systemd**. |
 | Traditional AppImages (made by linuxdeploy or similar tools) | **Hard dependency on glibc** (rarely works on distros older than 4 years), also has a soft dependency on **FUSE** since the user has to manually extract when FUSE is unavailable, they also need an FHS compliant system to work. |
 | **AnyLinux AppImages** (made with RunImage) | Similar to sharun AppImages but have a **Hard dependency on namespaces**, Lutris and virt-manager are the only ones that use this method, pending migration to sharun. |
 | **AnyLinux AppImages** (made with sharun) | Use **FUSE if available**, else **fallback to using namespaces** and if that is not possible then we automatically extract to `TMPDIR` and run with post cleanup, we **do not need an FHS filesystem** and **do not depend on the host libc**, so eh make sure you have `/bin/sh` and write access to `/tmp`??? (If you can boot to a graphical session you already met those requirements). **How is this possible?** See: [How to guide](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/docs/BUILDING.md) |
 
-* All the appimages used here use sharun with the exception of Lutris that uses RunImage.
-* Cromite was used for AppImage, however since there is no Flatpak of cromite (due to a security issue with Flatpak) ungoogled chromium was the closest thing picked for the Flatpak equivalent.
-* sas was included in the list of AppImages, since it is what provides AppImage sandboxing for AM. (hence 21 apps there).
-* The test was done on Artix linux on a Btrfs filesystem with zstd compression.
+- All the appimages used here use sharun with the exception of Lutris that uses RunImage.
+- Cromite was used for AppImage, however since there is no Flatpak of cromite (due to a security issue with Flatpak) ungoogled chromium was the closest thing picked for the Flatpak equivalent.
+- sas was included in the list of AppImages, since it is what provides AppImage sandboxing for AM. (hence 21 apps there).
+- The test was done on Artix linux on a Btrfs filesystem with zstd compression.
 
 Steps:
 
-* AppImages were installed with [appman](https://github.com/ivan-hc/AM) with this command.
+- AppImages were installed with [appman](https://github.com/ivan-hc/AM) with this command.
 
 ```shell
 appman -i \
@@ -54,7 +55,7 @@ appman -i \
 appman -f
 ```
 
-* With `Flatpak` the following command was used:
+- With `Flatpak` the following command was used:
 
 ```shell
 flatpak install \
@@ -82,6 +83,7 @@ flatpak install \
 flatpak uninstall --unused
 flatpak-dedup-checker
 ```
+
 ---
 
 <div align="center" markdown="1">
@@ -102,7 +104,7 @@ AnyLinux-AppImages use **3.1 times** less storage than Flatpak.
 
 Worthy note:
 
-* Not all filesystems support transparent compression, if this test had been done on ext4 filesystem then Flatpak would have taken **14.86 GiB** of disk, **more than 7x compared to AppImage.**
+- Not all filesystems support transparent compression, if this test had been done on ext4 filesystem then Flatpak would have taken **14.86 GiB** of disk, **more than 7x compared to AppImage.**
 
 In the end, a lot of the Flatpak bloat comes from the fact that Flatpak suffers from something that I call Flatpak-hell, Flatpak-hell is when one application depends on runtime version 2.2.0 but application B depends on a runtime version 2.2.1 so that means that both runtimes need to be downloaded and installed.
 
@@ -115,7 +117,6 @@ Lets assume Flatpak manages to fix this issue (will never happen), how will that
 # Bonus comparison: Anylinux-AppImages vs Alpine linux
 
 </div>
-
 
 Alpine linux is a very minimal distro whose developers actually put effort to reduce the size of the packages, [example](https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/icu/data-filter-en.yml).
 
@@ -155,8 +156,8 @@ sudo apk add \
 	rnote
 ```
 
-* No idea how alpine does not list wine as a dependency of lutris, in the appimage this is included.
+- No idea how alpine does not list wine as a dependency of lutris, in the appimage this is included.
 
-* chromium is the closest thing we have here to cromite.
+- chromium is the closest thing we have here to cromite.
 
 After adding those 12 applications the container size increase **`3.27GB (virtual 3.29GB)`.** So yeah we also use less storage than Alpine, note however I think this size does not take Btrfs compression into account, I tried to get the value but couldn't (running `btrfs filesystem du -s` on the alpine container reported 7 MIb which is just impossible lol).

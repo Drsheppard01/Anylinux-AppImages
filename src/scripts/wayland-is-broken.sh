@@ -5,8 +5,8 @@ set -e
 
 if [ "$I_WANT_A_BROKEN_WAYLAND_UI" != 1 ]; then
 	if [ "$XDG_SESSION_TYPE" = 'wayland' ]; then
-		>&2 echo "Wayland is disabled due to known issues"
-		>&2 echo "set I_WANT_A_BROKEN_WAYLAND_UI=1 if you still want to use it"
+		echo >&2 "Wayland is disabled due to known issues"
+		echo >&2 "set I_WANT_A_BROKEN_WAYLAND_UI=1 if you still want to use it"
 	fi
 	export SDL_VIDEO_DRIVER=x11
 	export QT_QPA_PLATFORM=xcb

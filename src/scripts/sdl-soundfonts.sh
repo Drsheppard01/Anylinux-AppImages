@@ -24,7 +24,7 @@ _get_soundfont() (
 		fi
 	else
 		mkdir -p "${_deny_soundfonts_file%/*}"
-		:> "$_deny_soundfonts_file"
+		: >"$_deny_soundfonts_file"
 	fi
 )
 
@@ -34,14 +34,14 @@ _find_soundfont() {
 	IFS=:
 	for d in $XDG_DATA_DIRS; do
 		set -- "$@" \
-		  "$d"/soundfonts/*.sf2 \
-		  "$d"/sounds/sf2/*.sf2 \
-		  "$d"/soundfonts/*.sf3 \
-		  "$d"/sounds/sf3/*.sf3
+			"$d"/soundfonts/*.sf2 \
+			"$d"/sounds/sf2/*.sf2 \
+			"$d"/soundfonts/*.sf3 \
+			"$d"/sounds/sf3/*.sf3
 	done
 	IFS=$_old_ifs
 
-	for soundfont do
+	for soundfont; do
 		if [ -f "$soundfont" ]; then
 			SDL_SOUNDFONTS=${SDL_SOUNDFONTS:+$SDL_SOUNDFONTS:}$soundfont
 		fi
