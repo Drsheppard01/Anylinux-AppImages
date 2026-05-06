@@ -82,7 +82,7 @@ Let's create an AppImage for a simple application. Here's a minimal example:
 set -eux
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/quick-sharun.sh"
+SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/scripts/quick-sharun.sh"
 
 # Configure the AppImage
 export ICON=/usr/share/icons/hicolor/256x256/apps/myapp.png

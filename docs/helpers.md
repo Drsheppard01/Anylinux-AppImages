@@ -2,18 +2,17 @@
 
 | Script | Description |
 | --- | --- |
-| `self-updater.sh` | Makes the AppImage self-updatable using appimageupdatetool |
-| `fix-namespaces.sh` | Fixes unprivileged user namespace restrictions (Ubuntu 24.04+) |
-| `fix-gnome-csd.sh` | Uses host libdecor plugins for window decorations on GNOME Wayland |
-| `udev-installer.sh` | Prompts the user to install bundled udev rules when needed |
-| `vulkan-check.sh` | Checks and fixes common Vulkan and hardware acceleration issues |
-| `x86-64-v3-check.sh` | Warns the user if their CPU does not support x86-64-v3 |
-| `x86-64-v4-check.sh` | Warns the user if their CPU does not support x86-64-v4 |
-| `host-libjack.sh` | Uses the host JACK library instead of the bundled one |
-| `wayland-is-broken.sh` | Forces X11 fallback for applications with known Wayland issues |
-| `sdl-soundfonts.sh` | Downloads and installs a SoundFont (FluidR3) when the application needs one |
-| `get-yt-dlp.sh` | Downloads `yt-dlp` when the application requires it to play online videos |
-| `qt-theme.sh` | Applies a custom Qt stylesheet via `APPIMAGE_QT_THEME` or a `.stylesheet` sidecar file |
+| [self-updater](../src/scripts/self-updater.sh) | Makes the AppImage self-updatable using appimageupdatetool |
+| [fix-namespaces](../src/scripts/fix-namespaces.sh) | Fixes unprivileged user namespace restrictions (Ubuntu 24.04+) |
+| [fix-gnome-csd](../src/scripts/fix-gnome-csd.sh) | Uses host libdecor plugins for window decorations on GNOME Wayland |
+| [udev-installer](../src/scripts/udev-installer.sh) | Prompts the user to install bundled udev rules when needed |
+| [vulkan-check](../src/scripts/vulkan-check.sh) | Checks and fixes common Vulkan and hardware acceleration issues |
+| [microarch-check](../src/scripts/microarch-check.sh) | Warns the user if their CPU does not support x86-64-v3 or x86-64-v4 |
+| [host-libjack](../src/scripts/host-libjack.sh) | Uses the host JACK library instead of the bundled one |
+| [wayland-is-broken](../src/scripts/wayland-is-broken.sh) | Forces X11 fallback for applications with known Wayland issues |
+| [sdl-soundfonts](../src/scripts/sdl-soundfonts.sh) | Downloads and installs a SoundFont (FluidR3) when the application needs one |
+| [get-yt-dlp](../src/scripts/get-yt-dlp.sh) | Downloads `yt-dlp` when the application requires it to play online videos |
+| [qt-theme](../src/scripts/qt-theme.sh) | Applies a custom Qt stylesheet via `APPIMAGE_QT_THEME` or a `.stylesheet` sidecar file |
 
 Additional sh can be placed in `$APPDIR/bin` and will be used automatically.
 
