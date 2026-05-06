@@ -1,25 +1,24 @@
 #!/bin/sh
 
-# Demonstration that bundles gtk3 demo app
+# Demonstration that bundles a simple Qt6 app that interacts with dbus
 
 set -eux
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/useful-tools/quick-sharun.sh"
-EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/useful-tools/get-debloated-pkgs.sh"
+SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/quick-sharun.sh"
+EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/get-debloated-pkgs.sh"
 
-export ICON=/usr/share/icons/hicolor/scalable/apps/org.gtk.Demo4.svg
-export DESKTOP=/usr/share/applications/org.gtk.Demo4.desktop
+export ICON=/usr/share/doc/qt6/global/template/images/Qt-logo.png
+export DESKTOP=DUMMY
+export MAIN_BIN=qdbusviewer6
 export OUTPATH=./dist
-export OUTNAME=gtk4-demo-"$ARCH".AppImage
-export STARTUPWMCLASS=fuck.gnome
-export GTK_CLASS_FIX=1
+export OUTNAME=Qt6+dbus-demo-"$ARCH".AppImage
 
 pacman -Syu --noconfirm \
 	base-devel       \
 	curl             \
 	git              \
-	gtk4-demos       \
+	kvantum          \
 	libxcb           \
 	libxcursor       \
 	libxi            \
@@ -27,7 +26,10 @@ pacman -Syu --noconfirm \
 	libxkbcommon-x11 \
 	libxrandr        \
 	libxtst          \
+	lxqt-qtplugin    \
 	mesa-utils       \
+	qt6ct            \
+	qt6-tools        \
 	vulkan-tools     \
 	wget             \
 	xorg-server-xvfb \
@@ -43,7 +45,7 @@ echo "Bundling AppImage..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
-./quick-sharun /usr/bin/gtk4-demo*
+./quick-sharun /usr/bin/qdbusviewer6
 
 ./quick-sharun --make-appimage
 

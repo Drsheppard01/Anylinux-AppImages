@@ -23,8 +23,8 @@ DST_LIB_DIR=$APPDIR/shared/lib
 MAIN_BIN=${MAIN_BIN##*/}
 
 SHARUN_LINK=${SHARUN_LINK:-https://github.com/VHSgunzo/sharun/releases/latest/download/sharun-$APPIMAGE_ARCH-aio}
-HOOKSRC=${HOOKSRC:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/hooks}
-LD_PRELOAD_OPEN=${LD_PRELOAD_OPEN:-https://github.com/VHSgunzo/pathmap.git}
+HOOKSRC=${HOOKSRC:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/scripts}
+LD_PRELOAD_OPEN=${LD_PRELOAD_OPEN:-https://github.com/VHSgunzo/pathmap}
 
 OUTPATH=${OUTPATH:-$PWD}
 DWARFS_COMP="${DWARFS_COMP:-zstd:level=22 -S26 -B6}"
@@ -34,9 +34,9 @@ APPIMAGETOOL_LINK=${APPIMAGETOOL_LINK:-https://github.com/pkgforge-dev/appimaget
 APPIMAGETOOL=${APPIMAGETOOL:-$TMPDIR/appimagetool}
 
 ANYLINUX_LIB=${ANYLINUX_LIB:-1}
-ANYLINUX_LIB_SOURCE=${ANYLINUX_LIB_SOURCE:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/lib/anylinux.c}
+ANYLINUX_LIB_SOURCE=${ANYLINUX_LIB_SOURCE:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/lib/anylinux.c}
 GTK_CLASS_FIX=${GTK_CLASS_FIX:-0}
-GTK_CLASS_FIX_SOURCE=${GTK_CLASS_FIX_SOURCE:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/lib/gtk-class-fix.c}
+GTK_CLASS_FIX_SOURCE=${GTK_CLASS_FIX_SOURCE:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/lib/gtk-class-fix.c}
 
 DEPLOY_DATADIR=${DEPLOY_DATADIR:-1}
 DEPLOY_LOCALE=${DEPLOY_LOCALE:-1}
@@ -94,8 +94,8 @@ export DST_DIR="$APPDIR"
 export GEN_LIB_PATH=1
 export HARD_LINKS=1
 export WITH_HOOKS=1
-export STRACE_MODE=${STRACE_MODE:-1}
-export WRAPPE_CLVL=${WRAPPE_CLVL:-15}
+export STRACE_MODE="${STRACE_MODE:-1}"
+export WRAPPE_CLVL="${WRAPPE_CLVL:-15}"
 export VERBOSE=1
 
 if [ -z "$NO_STRIP" ]; then
@@ -108,7 +108,7 @@ export USER="${LOGNAME:-${USER:-${USERNAME:-yomama}}}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 
 # apps often need this to work
-export $(dbus-launch 2>/dev/null || echo 'NO_DBUS=1')
+export "$(dbus-launch 2>/dev/null || echo 'NO_DBUS=1')"
 
 # CI containers often run as root which prevents
 # web apps from running with lib4bin strace mode
@@ -1048,7 +1048,7 @@ _make_deployment_array() {
 			$(find "$DOTNET_DIR"/shared -type f -name '*.so*' -print)
 		cp -r "$DOTNET_DIR"/shared "$APPDIR"/bin
 		cp -r "$DOTNET_DIR"/host   "$APPDIR"/bin
-		echo 'DOTNET_ROOT=${SHARUN_DIR}/bin' >> "$APPENV"
+		echo "DOTNET_ROOT=${SHARUN_DIR}/bin" >> "$APPENV"
 	fi
 	# these are needed by several toolkits
 	if [ "$DEPLOY_COMMON_LIBS" = 1 ]; then
@@ -1327,7 +1327,7 @@ _map_paths_ld_preload_open() {
 		)
 
 		deps="git make"
-		if ! _is_cmd $deps; then
+		if ! _is_cmd "$deps"; then
 			_err_msg "ERROR: Using PATH_MAPPING requires $deps"
 			exit 1
 		fi
@@ -1358,7 +1358,7 @@ _map_paths_binary_patch() {
 		done
 	elif [ -n "$PATH_MAPPING_HARDCODED" ]; then
 		set -f
-		set -- $PATH_MAPPING_HARDCODED
+		set -- "$PATH_MAPPING_HARDCODED"
 		set +f
 		_echo "* Patching files listed in PATH_MAPPING_HARDCODED..."
 		# only search for files to patch in the lib and bin dirs

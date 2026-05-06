@@ -13,7 +13,7 @@ Certain Linux distributions like Ubuntu since v24.04 and secureblue disable unpr
 This is what prevents the applications to utilize sandboxing.
 Unprivileged user-namespaces are safe and a vital part of the security model of all web browsers, flatpak, electron apps, etc.
 
-For more details, see: https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/fix-namespaces.md#why
+For more details, see: https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/fix-namespaces.md#why
 "
 _userns_check_msg_no_fix="$_userns_check_msg
 We do not have an automated way to enable unprivileged user-namespaces for your Linux distribution at the moment, so you will have to enable those manually.

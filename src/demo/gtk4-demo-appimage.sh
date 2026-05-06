@@ -1,24 +1,19 @@
 #!/bin/sh
 
-# Demonstration that bundles gtk4 demo app
-
-# this version deploys without hardware acceleration which results in a smaller
-# appimage, good for simple apps that do not really need hardware acceleration
+# Demonstration that bundles gtk3 demo app
 
 set -eux
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/useful-tools/quick-sharun.sh"
-EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/useful-tools/get-debloated-pkgs.sh"
+SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/quick-sharun.sh"
+EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/get-debloated-pkgs.sh"
 
 export ICON=/usr/share/icons/hicolor/scalable/apps/org.gtk.Demo4.svg
 export DESKTOP=/usr/share/applications/org.gtk.Demo4.desktop
 export OUTPATH=./dist
-export OUTNAME=gtk4-demo-onlysoftware-"$ARCH".AppImage
+export OUTNAME=gtk4-demo-"$ARCH".AppImage
 export STARTUPWMCLASS=fuck.gnome
 export GTK_CLASS_FIX=1
-# disable hardware accel
-export ALWAYS_SOFTWARE=1
 
 pacman -Syu --noconfirm \
 	base-devel       \

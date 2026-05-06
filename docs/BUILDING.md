@@ -1,6 +1,6 @@
 ---
 layout: default
-title: How To Make These
+title: BUILDING
 ---
 
 # How to make truly portable AppImages that work on any linux system
@@ -82,7 +82,7 @@ Let's create an AppImage for a simple application. Here's a minimal example:
 set -eux
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
+SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/quick-sharun.sh"
 
 # Configure the AppImage
 export ICON=/usr/share/icons/hicolor/256x256/apps/myapp.png
@@ -107,7 +107,7 @@ chmod +x ./quick-sharun
 **Using debloated packages** (smaller AppImages):
 
 ```shell
-EXTRA_PACKAGES="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/get-debloated-pkgs.sh"
+EXTRA_PACKAGES="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/get-debloated-pkgs.sh"
 
 wget "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
 chmod +x ./get-debloated-pkgs.sh
@@ -143,7 +143,7 @@ Hooks are scripts that solve common problems automatically. Add them using the `
 ADD_HOOKS="self-updater.hook:fix-namespaces.hook"
 ```
 
-All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook` suffixes are only kept for compatibility, so new examples should use plain `.hook` names. **More info in** [hook-system.md](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/useful-tools/hooks/hook-system.md)
+All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook` suffixes are only kept for compatibility, so new examples should use plain `.hook` names. **More info in** [hook-system.md](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/src/scripts/hook-system.md)
 
 **Deployment options:**
 
@@ -346,7 +346,7 @@ When for most applications you only need llvm to support AMDGPU and X86/AArch64.
 
 We already make such version of llvm here: <https://github.com/pkgforge-dev/archlinux-pkgs-debloated> which reduces the size of libLLVM.so down to 66 MiB.
 
-Such package and other debloated packages we have are used by [Goverlay](https://github.com/benjamimgois/goverlay), which results a **50 MiB** AppImage that works on any linux system, which is surprisingly small considering this application bundles **Qt** and **mesa**  (vulkan) among other things.
+Such package and other debloated packages we have are used by [Goverlay](https://github.com/benjamimgois/goverlay), which results a **50 MiB** AppImage that works on any Linux system, which is surprisingly small considering this application bundles **Qt** and **mesa**  (vulkan) among other things.
 
 -----------------------------------
 
@@ -372,15 +372,15 @@ Goes without saying that sharun handles all of this already on its own.
 
 ### Demo examples
 
-See the ready-to-use demo scripts in [`useful-tools/demo/`](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/useful-tools/demo):
+See the ready-to-use demo scripts in [`src/demo/`](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/src/demo):
 
-- [vkcube + glxgears](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/demo/vkcube-glxgears-appimage.sh) - Bundles OpenGL and Vulkan test binaries
-- [zink vkcube + glxgears](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/demo/zink-vkcube-glxgears-appimage.sh) - Same as above but using the Zink OpenGL-on-Vulkan driver
-- [gtk3-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/demo/gtk3-demo-appimage.sh) - Simple GTK3 application
-- [gtk4-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/demo/gtk4-demo-appimage.sh) - Simple GTK4 application
-- [gtk4-demo (software rendering)](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/demo/gtk4-demo-onlysoftware-appimage.sh) - GTK4 demo using software-only rendering
-- [qt6-dbus-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/demo/qt6-dbus-demo-appimage.sh) - Qt6 application with D-Bus
-- [qt6-dbus-demo (software rendering)](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/useful-tools/demo/qt6-dbus-demo-onlysoftware-appimage.sh) - Qt6 demo using software-only rendering
+- [vkcube + glxgears](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/vkcube-glxgears-appimage.sh) - Bundles OpenGL and Vulkan test binaries
+- [zink vkcube + glxgears](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/zink-vkcube-glxgears-appimage.sh) - Same as above but using the Zink OpenGL-on-Vulkan driver
+- [gtk3-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/gtk3-demo-appimage.sh) - Simple GTK3 application
+- [gtk4-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/gtk4-demo-appimage.sh) - Simple GTK4 application
+- [gtk4-demo (software rendering)](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/gtk4-demo-onlysoftware-appimage.sh) - GTK4 demo using software-only rendering
+- [qt6-dbus-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/qt6-dbus-demo-appimage.sh) - Qt6 application with D-Bus
+- [qt6-dbus-demo (software rendering)](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/qt6-dbus-demo-onlysoftware-appimage.sh) - Qt6 demo using software-only rendering
 
 ### Real-world examples
 
