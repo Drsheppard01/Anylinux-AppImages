@@ -126,5 +126,5 @@ For more details see:
 - <https://github.com/ivan-hc/AM/blob/main/docs/troubleshooting.md#ubuntu-mess>
 - <https://github.com/probonopd/go-appimage/issues/39#issuecomment-2849803316>
 
-- [^1]: <https://github.com/AppImage/AppImageKit/issues/852>
-- [^2]: <https://github.com/pkgforge-dev/ghostty-appimage/issues/20>
+[^1]: <https://github.com/AppImage/AppImageKit/issues/852>
+[^2]: <https://github.com/pkgforge-dev/ghostty-appimage/issues/20>
