@@ -66,7 +66,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Make AppImage
-        run: sh ./src/demo/${{ matrix.script }}.sh
+        run: sh ./src/demos/${{ matrix.script }}.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v6

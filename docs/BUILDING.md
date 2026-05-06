@@ -143,7 +143,7 @@ Hooks are scripts that solve common problems automatically. Add them using the `
 ADD_HOOKS="self-updater.hook:fix-namespaces.hook"
 ```
 
-All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook` suffixes are only kept for compatibility, so new examples should use plain `.hook` names. **More info in** [hook-system.md](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/src/scripts/hook-system.md)
+All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook` suffixes are only kept for compatibility, so new examples should use plain `.hook` names. **More info in** [helpers.md](helpers.md)
 
 **Deployment options:**
 
@@ -372,15 +372,15 @@ Goes without saying that sharun handles all of this already on its own.
 
 ### Demo examples
 
-See the ready-to-use demo scripts in [`src/demo/`](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/src/demo):
+See the ready-to-use demo scripts in [`src/demos/`](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/src/demos):
 
-- [vkcube + glxgears](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/vkcube-glxgears-appimage.sh) - Bundles OpenGL and Vulkan test binaries
-- [zink vkcube + glxgears](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/zink-vkcube-glxgears-appimage.sh) - Same as above but using the Zink OpenGL-on-Vulkan driver
-- [gtk3-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/gtk3-demo-appimage.sh) - Simple GTK3 application
-- [gtk4-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/gtk4-demo-appimage.sh) - Simple GTK4 application
-- [gtk4-demo (software rendering)](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/gtk4-demo-onlysoftware-appimage.sh) - GTK4 demo using software-only rendering
-- [qt6-dbus-demo](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/qt6-dbus-demo-appimage.sh) - Qt6 application with D-Bus
-- [qt6-dbus-demo (software rendering)](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/src/demo/qt6-dbus-demo-onlysoftware-appimage.sh) - Qt6 demo using software-only rendering
+- [vkcube + glxgears](../src/demos/vkcube-glxgears-appimage.sh) - Bundles OpenGL and Vulkan test binaries
+- [zink vkcube + glxgears](../src/demos/zink-vkcube-glxgears-appimage.sh) - Same as above but using the Zink OpenGL-on-Vulkan driver
+- [gtk3-demo](../src/demos/gtk3-demo-appimage.sh) - Simple GTK3 application
+- [gtk4-demo](../src/demos/gtk4-demo-appimage.sh) - Simple GTK4 application
+- [gtk4-demo (software rendering)](../src/demos/gtk4-demo-onlysoftware-appimage.sh) - GTK4 demo using software-only rendering
+- [qt6-dbus-demo](../src/demos/qt6-dbus-demo-appimage.sh) - Qt6 application with D-Bus
+- [qt6-dbus-demo (software rendering)](../src/demos/qt6-dbus-demo-onlysoftware-appimage.sh) - Qt6 demo using software-only rendering
 
 ### Real-world examples
 
@@ -389,7 +389,7 @@ Browse through our production AppImage repositories for more complex examples:
 - [Cromite](https://github.com/pkgforge-dev/Cromite-AppImage/blob/7e3171f1b2a6138cb27a7309c1e386435ea1fe12/cromite-appimage.sh#L38-L59) - Chromium-based browser
 - [Azahar](https://github.com/pkgforge-dev/Azahar-AppImage-Enhanced/blob/d2e97d16ebce1f421187b9887767e6660ac57dcb/azahar-appimage.sh#L73-L97) - Nintendo 3DS emulator
 - [scrcpy](https://github.com/pkgforge-dev/scrcpy-AppImage/blob/97fb70cc3b2885753116f43d3f64106cae2227d1/scrcpy-appimage.sh#L11-L43) - Android screen mirroring
-- [See all AppImages](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/main/README.md#applications)
+- [See all AppImages](../README.md#applications)
 - **[And our template that greatly simplifies this!](https://github.com/pkgforge-dev/TEMPLATE-AppImage)**
 
 ---
