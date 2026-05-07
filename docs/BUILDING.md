@@ -57,7 +57,7 @@ You'll need:
 Creating an AppImage with quick-sharun involves these steps:
 
 1. **Install your application** and its dependencies on your build system
-2. **Download quick-sharun.sh** from this repository
+2. **Download quick-sharun.sh** from this [repository](../src/scripts/quick-sharun.sh)
 3. **Set environment variables** to configure `quick-sharun`
 4. **Run quick-sharun** with your application's binary (and libraries) path to deploy.
 5. **Generate the AppImage** with `--make-appimage` flag
@@ -139,7 +139,7 @@ chmod +x ./get-debloated-pkgs.sh
 
 Hooks are scripts that solve common problems automatically. Add them using the `ADD_HOOKS` variable, each entry being colon separated:
 
-```sh
+```shell
 ADD_HOOKS="self-updater.hook:fix-namespaces.hook"
 ```
 
@@ -147,8 +147,8 @@ All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook
 
 **Deployment options:**
 
-- `DEPLOY_OPENGL=1` - Bundles OpenGL libraries (mesa). Enabled automatically in most cases.
-- `DEPLOY_VULKAN=1` - Bundles Vulkan libraries (mesa). Enabled automatically in most cases.
+- `DEPLOY_OPENGL=1` - Bundles OpenGL libraries (MESA). Enabled by default in most cases.
+- `DEPLOY_VULKAN=1` - Bundles Vulkan libraries (MESA). Enabled by default in most cases.
 - `DEPLOY_PYTHON=1` - Bundles the system Python installation (default: disabled).
 - `DEPLOY_LOCALE=1` - Deploys locale files (default: enabled).
 - `ANYLINUX_LIB=1` - Preloads library that fixes several common issues that affect AppImage (default: enabled).
@@ -222,6 +222,7 @@ Instead we have to run the dynamic linker first, and then give it the binary we 
 
 ```shell
 #!/bin/sh
+
 CURRENTDIR="$(readlink -f "$(dirname "$0")")"
 
 exec "$CURRENTDIR"/ld-linux-x86-64.so.2 "$CURRENTDIR"/bin/app "$@"
@@ -233,7 +234,7 @@ However this has a small issue that `/proc/self/exe` will be `ld-linux-x86-64.so
 
 Now that we have our own dynamic linker, how do we tell it that we can to use all the libraries we have in our own `lib` directory?
 
-- `LD_LIBRARY_PATH` ❌ Nope, terrible idea. **NEVER USE THIS VARIABLE**, it causes a lot of headaches because it is inherited by child processes, which means everything being launched by our application will try to use our libraries, and this causes insanely broken behaviours that are hard to catch. [For example](https://github.com/zen-browser/desktop/issues/2748), this issue lasted several months and no one had an idea what was going on until I [removed](https://github.com/zen-browser/desktop/pull/6156/files) the usage of `LD_LIBRARY_PATH`, which the application didn't even need to have it set in this case. Also see: [LD_LIBRARY_PATH – or: How to get yourself into trouble!](https://www.hpc.dtu.dk/?page_id=1180)
+- ~~LD_LIBRARY_PATH~~ ❌ Nope, terrible idea. **NEVER USE THIS VARIABLE**, it causes a lot of headaches because it is inherited by child processes, which means everything being launched by our application will try to use our libraries, and this causes insanely broken behaviours that are hard to catch. [For example](https://github.com/zen-browser/desktop/issues/2748), this issue lasted several months and no one had an idea what was going on until I [removed](https://github.com/zen-browser/desktop/pull/6156/files) the usage of `LD_LIBRARY_PATH`, which the application didn't even need to have it set in this case. Also see: [LD_LIBRARY_PATH – or: How to get yourself into trouble!](https://www.hpc.dtu.dk/?page_id=1180)
 
 - Lets set our rpath to be `$ORIGIN/path/to/libs`, totally valid! ☑️ However, a lot of the times, this is not done at compile time and instead it is done with `patchelf` in runtime. While doing it is fine 99% of the time, that 1% when it breaks something, it is very hard to catch what went wrong.
 
@@ -241,11 +242,12 @@ Now that we have our own dynamic linker, how do we tell it that we can to use al
 
 ```shell
 #!/bin/sh
+
 CURRENTDIR="$(readlink -f "$(dirname "$0")")"
 
 exec "$CURRENTDIR"/ld-linux-x86-64.so.2 \
---library-path "$CURRENTDIR"/lib \
-"$CURRENTDIR"/bin/app "$@"
+  --library-path "$CURRENTDIR"/lib \
+  "$CURRENTDIR"/bin/app "$@"
 ```
 
 We need to bundle the libraries and dynamic linker and we are **almost** good to go! However, to be fully ready, we need to fix the following issues below… **Bundling all the needed libraries isn't as easy as just running `ldd` + `cp`**, so we need some more robust solution. Sharun handles this automatically (see below).
@@ -266,9 +268,9 @@ Same way, the dependencies we bundle will almost always have means to make reloc
 
 - Qt has `QT_PLUGIN_PATH`, but it also has a different method to be relocatable by making a `qt.conf` file next to our qt app binary. **This is much better because this variable has similar issues to** `LD_LIBRARY_PATH`
 
-- `PIPEWIRE_MODULE_DIR` and `SPA_PLUGIN_DIR` for pipewire.
+- `PIPEWIRE_MODULE_DIR` and `SPA_PLUGIN_DIR` for PipeWire.
 
-- `VK_DRIVER_FILES` and `__EGL_VENDOR_LIBRARY_DIRS` for mesa (vulkan and opengl) 💪
+- `VK_DRIVER_FILES` and `__EGL_VENDOR_LIBRARY_DIRS` for MESA (Vulkan and OpenGL) 💪
 
 And many many more!
 
@@ -284,13 +286,13 @@ But isn't this a lot of work to find and set all the env variables that my appli
 
 ### _Sharun_
 
-There is a solution for this, made by @VHSGunzo called sharun:
+There is a solution for this, made by [VHSGunzo](https://github.com/vhsgunzo) called sharun:
 
 <https://github.com/VHSgunzo/sharun>
 
 - sharun is able to find all the libraries that your application needs, **including those that are dlopened**. It turns out that a lot of applications depend on dlopened libraries; those are the libraries that you cannot easily find with just `ldd`. Sharun uses a deployment script called `lib4bin` that has the strace mode; **that mode makes `lib4bin` open the application with strace to check all the dlopened libraries and then bundle them.**
 
-- sharun also detects and sets a ton of [env variables](https://github.com/VHSgunzo/sharun?tab=readme-ov-file#environment-variables-that-are-set-if-sharun-finds-a-directory-or-file.) that the application needs to work.
+- sharun also detects and sets a ton of [env variables](https://github.com/VHSgunzo/sharun?tab=readme-ov-file#environment-variables-that-are-set-if-sharun-finds-a-directory-or-file) that the application needs to work.
 
 - it also fixes the issue of `/proc/self/exe` being `ld-linux-x86-64.so.2` 👀 For this issue, what it does is it places all the shared libraries and binaries in `shared/{lib,bin}` and then hardlinks itself to the `bin` directory of our `AppDir`; then when you call `bin/app`, it automatically calls the bundled dynamic linker and runs the binary with the name of the hardlink, while giving the path to our bundled libraries with `--library-path`
 
@@ -298,9 +300,9 @@ There is a solution for this, made by @VHSGunzo called sharun:
 
 - sharun is not just for the AppImages, you can also use it anywhere you need to make any sort of application portable. You can even make pseudo-static binaries from existing dynamic binaries, which sharun does with the help of wrappe.
 
-- sharun even has hooks to fix applications that aren't relocatable, like webkit2gtk which is hardcoded to look for some binaries in `/usr/lib`, it fixes this with patching all automatically for you.
+- sharun even has hooks to fix applications that aren't relocatable, like WebKitGTK which is hardcoded to look for some binaries in `/usr/lib`, it fixes this with patching all automatically for you.
 
-Any application made with sharun ends up being able to work **on any linux distro**, be it ubuntu 14.04, musl distros and even directly in NixOS without any wrapper (non FHS environment).
+Any application made with sharun ends up being able to work **on any linux distro**, be it Ubuntu 14.04, Musl distros and even directly in NixOS without any wrapper (non FHS environment).
 
 ---
 
@@ -346,7 +348,7 @@ When for most applications you only need llvm to support AMDGPU and X86/AArch64.
 
 We already make such version of llvm here: <https://github.com/pkgforge-dev/archlinux-pkgs-debloated> which reduces the size of libLLVM.so down to 66 MiB.
 
-Such package and other debloated packages we have are used by [Goverlay](https://github.com/benjamimgois/goverlay), which results a **50 MiB** AppImage that works on any Linux system, which is surprisingly small considering this application bundles **Qt** and **mesa** (vulkan) among other things.
+Such package and other debloated packages we have are used by [Goverlay](https://github.com/benjamimgois/goverlay), which results a **50 MiB** AppImage that works on any Linux system, which is surprisingly small considering this application bundles **Qt** and **Mesa** (Vulkan) among other things.
 
 ---
 
@@ -354,11 +356,11 @@ Such package and other debloated packages we have are used by [Goverlay](https:/
 
 ---
 
-### _What about nvidia?_
+### _What about NVIDIA?_
 
 Nvidia releases its proprietary driver as a binary blob that is already widely compatible on its own, it's only requirement is a new enough version of glibc, which the appimages made here will do as long as you build them on a glibc distro. Then you just need to add the nvidia icds to `VK_DRIVER_FILES` to be able to use it without problem.
 
-If you don't have the proprietary nvidia driver, mesa already includes nouveau support for the few GPUs where this driver actually works (NVIDIA GTX 16 series or newer).
+If you don't have the proprietary NVIDIA driver, Mesa already includes Nouveau support for the few GPUs where this driver actually works (NVIDIA GTX 16 series or newer).
 
 Goes without saying that sharun handles all of this already on its own.
 
