@@ -5,9 +5,9 @@
 set -eux
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/scripts/quick-sharun.sh"
-AUR="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/make-aur-package.sh"
-EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/get-debloated-pkgs.sh"
+SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/rework/src/scripts/quick-sharun.sh"
+AUR="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/rework/src/make-aur-package.sh"
+EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/rework/src/scripts/get-debloated-pkgs.sh"
 
 export DEPLOY_OPENGL=1
 export DEPLOY_VULKAN=1

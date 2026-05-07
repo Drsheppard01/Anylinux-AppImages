@@ -86,7 +86,7 @@ Also sometimes the bloody [thing needs ffmpeg to work](https://github.com/pkgfor
 
 # Bad - OpenSSL
 
-This is a general failure of linux that there is no standard path to the certificates on the host, there is however a convention that most distros have the certificates in `/etc/ssl/certs/ca-certificates.crt`, that location is there in Alpine, Arch, Ubuntu, Fedora and even NixOS. For the distros that do not we have to play this game of [finding the certs and setting a ton of variables](https://github.com/pkgforge-dev/Anylinux-AppImages/blob/f2d9fcb8b18d7c3639633a18caf59d90ed587469/src/scripts/quick-sharun.sh#L1007-L1024). At least there are variables we can set, because the next project does not 😹
+This is a general failure of linux that there is no standard path to the certificates on the host, there is however a convention that most distros have the certificates in `/etc/ssl/certs/ca-certificates.crt`, that location is there in Alpine, Arch, Ubuntu, Fedora and even NixOS. For the distros that do not we have to play this game of [finding the certs and setting a ton of variables](https://github.com/drsheppard01/Anylinux-AppImages/blob/f2d9fcb8b18d7c3639633a18caf59d90ed587469/src/scripts/quick-sharun.sh#L1007-L1024). At least there are variables we can set, because the next project does not 😹
 
 # Horrible - p11kit
 
@@ -120,10 +120,10 @@ At least more recently they are looking into adding [svg support into GTK4](http
 
 # Utter Garbage - Python
 
-* Applications break horribly with the sightless version bump. [1](https://github.com/pkgforge-dev/puddletag-AppImage/pull/11) [2](https://github.com/pkgforge-dev/Anylinux-AppImages/issues/215)
+* Applications break horribly with the sightless version bump. [1](https://github.com/pkgforge-dev/puddletag-AppImage/pull/11) [2](https://github.com/drsheppard01/Anylinux-AppImages/issues/215)
 * cpython running `/sbin/ldconfig -p` to find libraries, super broken. [1](https://github.com/python/cpython/issues/112417) [2](https://github.com/python/cpython/issues/142020) [3](https://github.com/python/cpython/issues/142020#issuecomment-3590632764)
 * [uv python breaks if you strip it](https://github.com/VHSgunzo/sharun/blob/9ced775c762193ab525acfb9a9497b17945db8de/lib4bin#L182-L184) 😹
 * Builds randomly began to fail **on the same python uv version** and had to use [this to it](https://github.com/pkgforge-dev/GIMP-and-PhotoGIMP-AppImage/commit/e6a5601eeb7a3c4013b9452ca9c01eda7c5ec9e0)
 * python apps are often written with a ton of hardcoded paths, **even more than GTK apps**, so a lot of manual patches are needed to fix them. This is the result of a language that suggests containers to work.
-* Good luck figuring the dependencies of python apps, you often run into missing undeclared dependencies [1](https://github.com/pkgforge-dev/Anylinux-AppImages/issues/256#issuecomment-3797407784) [2](https://github.com/pkgforge-dev/blender-AppImage/issues/5#issuecomment-3815841765)
+* Good luck figuring the dependencies of python apps, you often run into missing undeclared dependencies [1](https://github.com/drsheppard01/Anylinux-AppImages/issues/256#issuecomment-3797407784) [2](https://github.com/pkgforge-dev/blender-AppImage/issues/5#issuecomment-3815841765)
 * Totally broken libraries that the developers refuse to fix [1](https://github.com/certifi/python-certifi/issues/200) [2](https://github.com/certifi/python-certifi/issues/271)

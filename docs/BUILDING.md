@@ -82,7 +82,7 @@ Let's create an AppImage for a simple application. Here's a minimal example:
 set -eux
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/scripts/quick-sharun.sh"
+SHARUN="https://raw.githubusercontent.com/drsheppard01/Anylinux-AppImages/refs/heads/rework/src/scripts/quick-sharun.sh"
 
 # Configure the AppImage
 export ICON=/usr/share/icons/hicolor/256x256/apps/myapp.png
@@ -107,7 +107,7 @@ chmod +x ./quick-sharun
 **Using debloated packages** (smaller AppImages):
 
 ```shell
-EXTRA_PACKAGES="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/get-debloated-pkgs.sh"
+EXTRA_PACKAGES="https://raw.githubusercontent.com/drsheppard01/Anylinux-AppImages/refs/heads/rework/src/scripts/get-debloated-pkgs.sh"
 
 wget "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
 chmod +x ./get-debloated-pkgs.sh
@@ -372,7 +372,7 @@ Goes without saying that sharun handles all of this already on its own.
 
 ### Demo examples
 
-See the ready-to-use demo scripts in [`src/demos/`](https://github.com/pkgforge-dev/Anylinux-AppImages/tree/main/src/demos):
+See the ready-to-use demo scripts in [src/demos/](../src/demos):
 
 - [vkcube + glxgears](../src/demos/vkcube-glxgears-appimage.sh) - Bundles OpenGL and Vulkan test binaries
 - [zink vkcube + glxgears](../src/demos/zink-vkcube-glxgears-appimage.sh) - Same as above but using the Zink OpenGL-on-Vulkan driver

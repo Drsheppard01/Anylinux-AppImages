@@ -23,7 +23,7 @@ DST_LIB_DIR=$APPDIR/shared/lib
 MAIN_BIN=${MAIN_BIN##*/}
 
 SHARUN_LINK=${SHARUN_LINK:-https://github.com/VHSgunzo/sharun/releases/latest/download/sharun-$APPIMAGE_ARCH-aio}
-HOOKSRC=${HOOKSRC:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/scripts}
+HOOKSRC=${HOOKSRC:-https://raw.githubusercontent.com/drsheppard01/Anylinux-AppImages/refs/heads/rework/src/scripts}
 LD_PRELOAD_OPEN=${LD_PRELOAD_OPEN:-https://github.com/VHSgunzo/pathmap}
 
 OUTPATH=${OUTPATH:-$PWD}
@@ -34,9 +34,9 @@ APPIMAGETOOL_LINK=${APPIMAGETOOL_LINK:-https://github.com/pkgforge-dev/appimaget
 APPIMAGETOOL=${APPIMAGETOOL:-$TMPDIR/appimagetool}
 
 ANYLINUX_LIB=${ANYLINUX_LIB:-1}
-ANYLINUX_LIB_SOURCE=${ANYLINUX_LIB_SOURCE:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/lib/anylinux.c}
+ANYLINUX_LIB_SOURCE=${ANYLINUX_LIB_SOURCE:-https://raw.githubusercontent.com/drsheppard01/Anylinux-AppImages/refs/heads/rework/src/lib/anylinux.c}
 GTK_CLASS_FIX=${GTK_CLASS_FIX:-0}
-GTK_CLASS_FIX_SOURCE=${GTK_CLASS_FIX_SOURCE:-https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/src/lib/gtk-class-fix.c}
+GTK_CLASS_FIX_SOURCE=${GTK_CLASS_FIX_SOURCE:-https://raw.githubusercontent.com/drsheppard01/Anylinux-AppImages/refs/heads/rework/src/lib/gtk-class-fix.c}
 
 DEPLOY_DATADIR=${DEPLOY_DATADIR:-1}
 DEPLOY_LOCALE=${DEPLOY_LOCALE:-1}
@@ -650,7 +650,7 @@ _make_deployment_array() {
 	# It also causes hard to spot issues when needed and not present
 	#
 	# https://github.com/pkgforge-dev/Dolphin-emu-AppImage/issues/20
-	# https://github.com/pkgforge-dev/Anylinux-AppImages/pull/410
+	# https://github.com/drsheppard01/Anylinux-AppImages/pull/410
 	#
 	if [ -d "$LIB_DIR"/gconv ]; then
 		_echo "* Deploying minimal gconv"
@@ -2871,7 +2871,7 @@ _add_apprun
 chmod +x "$APPDIR"/AppRun || :
 
 # always make sure that AppDir/lib exists, sometimes lib4bin does not make it
-# https://github.com/pkgforge-dev/Anylinux-AppImages/issues/269#issuecomment-3829584043
+# https://github.com/drsheppard01/Anylinux-AppImages/issues/269#issuecomment-3829584043
 for d in lib lib32; do
 	dir=$APPDIR/shared/$d
 	symlink=$APPDIR/$d

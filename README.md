@@ -5,9 +5,7 @@ permalink: /
 ---
 
 ## **Anylinux AppImages**
-
-![Downloads](https://img.shields.io/endpoint?url=https://cdn.jsdelivr.net/gh/pkgforge-dev/Anylinux-AppImages@main/.github/badge.json)
-
+drsheppard01/Anylinux-AppImagesdrsheppard01/Anylinux-AppImages
 Designed to run seamlessly on any Linux distribution, including very very old distributions and musl-based ones. Our AppImages bundle all the needed dependencies and do not depend on host libraries to work, unlike most other AppImages, **all while being significantly smaller thanks to [DwarFS](https://github.com/mhx/dwarfs) and [optimized packages](https://github.com/pkgforge-dev/archlinux-pkgs-debloated)**.
 
 Most of the AppImages are made with [sharun](https://github.com/VHSgunzo/sharun). We also use an alternative better [runtime](https://github.com/VHSgunzo/uruntime).
@@ -410,4 +408,4 @@ For more useful documentation about Anylinux-AppImages, see the pages below:
 
 ---
 
-Also see [other projects](https://github.com/VHSgunzo/sharun?tab=readme-ov-file#projects-that-use-sharun) that use sharun for more. **Didn't find what you were looking for?** Open an issue [here](https://github.com/pkgforge-dev/Anylinux-AppImages/issues) and we will see what we can do.
+Also see [other projects](https://github.com/VHSgunzo/sharun?tab=readme-ov-file#projects-that-use-sharun) that use sharun for more. **Didn't find what you were looking for?** Open an issue [here](https://github.com/drsheppard01/Anylinux-AppImages/issues) and we will see what we can do.

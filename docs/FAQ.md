@@ -76,6 +76,9 @@ Because it causes more issues than it solves.
 
 * `/usr` is the typical installation prefix for an application.
 
-* `$APPDIR/usr` makes no sense, it just causes projects to code exceptions for appimage that do something alone these lines: `getenv(APPDIR)` + `usr` + `xyz`. Instead we make `APPDIR` the installation prefix directly. **This means we can take any application and patch away the `/usr` prefix for `$APPDIR` and make them portable without the need for projects to support AppImage.** Here are some examples where projects checking for `$APPDIR` just made things worse: [1](https://github.com/kem-a/AppManager/issues/41#issuecomment-3905238762) [2](https://github.com/pkgforge-dev/Anylinux-AppImages/issues/330#issuecomment-3939566890)
+* `$APPDIR/usr` makes no sense, it just causes projects to code exceptions for appimage that do something alone these lines: `getenv(APPDIR)` + `usr` + `xyz`. Instead we make `APPDIR` the installation prefix directly. **This means we can take any application and patch away the `/usr` prefix for `$APPDIR` and make them portable without the need for projects to support AppImage.** Here are some examples where projects checking for `$APPDIR` just made things worse: [^1][^2]
 
 * **NOTE:** `$APPDIR/shared` is the a internal directory that sharun uses for itself, **you should never copy anything manually there.**
+
+[^1]: https://github.com/kem-a/AppManager/issues/41#issuecomment-3905238762
+[^2]: https://github.com/drsheppard01/Anylinux-AppImages/issues/330#issuecomment-3939566890

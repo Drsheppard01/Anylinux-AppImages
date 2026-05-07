@@ -5,8 +5,8 @@
 set -eux
 
 ARCH="$(uname -m)"
-SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/scripts/quick-sharun.sh"
-EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/main/src/get-debloated-pkgs.sh"
+SHARUN="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/rework/src/scripts/quick-sharun.sh"
+EXTRA_PACKAGES="https://raw.githubusercontent.com/${GITHUB_REPOSITORY%/*}/${GITHUB_REPOSITORY#*/}/refs/heads/rework/src/scripts/get-debloated-pkgs.sh"
 
 export ICON=/usr/share/icons/hicolor/scalable/apps/org.gtk.Demo4.svg
 export DESKTOP=/usr/share/applications/org.gtk.Demo4.desktop
