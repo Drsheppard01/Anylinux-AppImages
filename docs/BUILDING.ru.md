@@ -3,6 +3,9 @@ layout: default
 title: Сборка
 ---
 
+<!--Этот файл был переведён [DrSheppard01](https://Drsheppard01.github.io)
+-->
+
 # Как создавать действительно портативные AppImage, работающие на любой системе Linux
 
 ---
