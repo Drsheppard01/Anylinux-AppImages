@@ -30,10 +30,10 @@ jobs:
           )"
 
           cp ./.github/repos.stats /tmp/repos.stats.prev
-          
+
+          set -o pipefail
           for REPO in $REPOS; do
               REPO=${REPO##*/}
-              set -o pipefail
               if ! NUM=$(wget --header="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                 "https://api.github.com/repos/pkgforge-dev/$REPO/releases?per_page=100" -O - \
                 | ./gron.awk | awk -F'=' '/download_count/ {total += $2} END {print total}'); then
