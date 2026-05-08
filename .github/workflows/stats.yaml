@@ -44,10 +44,10 @@ jobs:
               echo "$NUM"
               echo "=============================="
           
-              if ! grep -q "$REPO:" ./.github/repos.stats; then
+              if ! grep -q "^$REPO:" ./.github/repos.stats; then
                   echo "${REPO}: $NUM" >> ./.github/repos.stats
               else
-                  sed -i -e "s|$REPO:.*|${REPO}: $NUM|" ./.github/repos.stats
+                  sed -i -e "s|^$REPO:.*|${REPO}: $NUM|" ./.github/repos.stats
               fi
           done
           
