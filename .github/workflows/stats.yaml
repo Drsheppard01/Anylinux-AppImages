@@ -33,13 +33,12 @@ jobs:
           
           for REPO in $REPOS; do
               REPO=${REPO##*/}
-              NUM=$(wget -q --header="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                  "https://api.github.com/repos/pkgforge-dev/$REPO/releases?per_page=100" -O - \
-                  | ./gron.awk | awk -F'=' '/download_count/ {total += $2} END {print total}')
-          
-              if [ -z "$NUM" ]; then
-                >&2 echo "WARNING, COULD NOT GET STATS FROM $REPO"
-                continue
+              set -o pipefail
+              if ! NUM=$(wget --header="Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/pkgforge-dev/$REPO/releases?per_page=100" -O - \
+                | ./gron.awk | awk -F'=' '/download_count/ {total += $2} END {print total}'); then
+                  >&2 echo "WARNING, COULD NOT GET STATS FROM $REPO"
+                  continue
               fi
           
               if ! grep -q "$REPO:" ./.github/repos.stats; then
