@@ -5,11 +5,8 @@ title: BUILDING
 
 # How to make truly portable AppImages that work on any linux system
 
----
 
-## Index
-
----
+# [Table of Content](#table-of-content)
 
 - [Quick Start Guide](#quick-start-guide)
   - [Prerequisites](#prerequisites)
@@ -26,19 +23,12 @@ title: BUILDING
   - [What about nvidia?](#what-about-nvidia)
 - [Examples and templates](#examples-and-templates)
 
----
+## Quick Start Guide
 
-## _Quick Start Guide_
+> [!NOTE]
+> Use `quick-sharun.sh` to bundle your application with all its dependencies into a truly portable AppImage that works on any Linux system.
 
-**TL;DR:** Use `quick-sharun.sh` to bundle your application with all its dependencies into a truly portable AppImage that works on any Linux system.
-
----
-
-### [Back to Index](#index)
-
----
-
-### _Prerequisites_
+### Prerequisites
 
 You'll need:
 
@@ -46,13 +36,7 @@ You'll need:
 - Basic shell scripting knowledge
 - The application you want to package (very preferably installed to /usr)
 
----
-
-### [Back to Index](#index)
-
----
-
-### _Basic workflow_
+### Basic workflow
 
 Creating an AppImage with quick-sharun involves these steps:
 
@@ -67,13 +51,7 @@ That's it! The script will:
 - Detect and bundle all required libraries (including those that are dlopened)
 - Create a portable AppImage that works everywhere
 
----
-
-### [Back to Index](#index)
-
----
-
-### _Step-by-step example_
+### Step-by-step example
 
 Let's create an AppImage for a simple application. Here's a minimal example:
 
@@ -119,15 +97,9 @@ chmod +x ./get-debloated-pkgs.sh
 ./get-debloated-pkgs.sh --add-common --prefer-nano ffmpeg-mini intel-media-driver-mini
 ```
 
----
+### Configurable environment variables
 
-### [Back to Index](#index)
-
----
-
-### _Configurable environment variables_
-
-**Basic configuration:**
+#### Basic configuration
 
 - `APPDIR` - Where to build the AppDir (default: `$PWD/AppDir`).
 - `ICON` - Path to application icon.
@@ -135,17 +107,17 @@ chmod +x ./get-debloated-pkgs.sh
 - `OUTPATH` - Where to save the AppImage (default: `$PWD`).
 - `OUTNAME` - Name of the output AppImage file. If not set the name from the `.desktop` file is used.
 
-**Hooks:**
+#### Helpers
 
-Hooks are scripts that solve common problems automatically. Add them using the `ADD_HOOKS` variable, each entry being colon separated:
+Helpers are scripts that solve common problems automatically. Add them using the `ADD_HOOKS` variable, each entry being colon separated:
 
 ```shell
 ADD_HOOKS="self-updater.hook:fix-namespaces.hook"
 ```
 
-All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook` suffixes are only kept for compatibility, so new examples should use plain `.hook` names. **More info in** [helpers.md](helpers.md)
+All helpers are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook` suffixes are only kept for compatibility, so new examples should use plain `.hook` names. **More info in** [helpers.md](helpers.md)
 
-**Deployment options:**
+#### Deployment options
 
 - `DEPLOY_OPENGL=1` - Bundles OpenGL libraries (MESA). Enabled by default in most cases.
 - `DEPLOY_VULKAN=1` - Bundles Vulkan libraries (MESA). Enabled by default in most cases.
@@ -158,23 +130,11 @@ All hooks are sourced by the generated `AppRun`. Older `.bg.hook` and `.src.hook
 - `STRIP=1` - Strips debug symbols to reduce size (default: enabled unless `NO_STRIP` is set)
 - `DEBLOAT_LOCALE=1` - Removes unneeded locale files to reduce size (default: enabled)
 
----
-
-### [Back to Index](#index)
-
----
-
-## _Understanding the approach_
+## Understanding the approach
 
 This section explains the technical details and philosophy behind these AppImages. If you just want to create AppImages, the [Quick Start Guide](#quick-start-guide) above is all you need.
 
----
-
-### [Back to Index](#index)
-
----
-
-### _The problem_
+### The problem
 
 For a long time the suggested practice to make AppImages has been to bundle most of the libraries an application needs but not all like libc, dynamic linker, and several more mentioned in the [exclude list](https://github.com/AppImageCommunity/pkg2appimage/blob/master/excludelist)
 
@@ -186,13 +146,7 @@ This approach has two big issues:
 
 And the future stability isn't that great either, because glibc still sometimes breaks userspace with updates.
 
----
-
-### [Back to Index](#index)
-
----
-
-### _The solution_
+### The solution
 
 - ~~Lets use a container~~ ❌ nope that has a bunch of limitations and weird quirks, [very bloated](https://imgur.com/a/appimage-vs-flatpak-size-comparison-QH1dPyb) and depends on unprivileged user-namespaces [which you cannot even rely on...](https://github.com/linuxmint/mint22-beta/issues/82). It's worth adding that there are some cases where containers are really the only viable option, especially with applications that depend on both 32 and 64 bit libs, in which doing this without a container is going to be a lot of pain, but yeah, always leave this as a last resort method.
 
@@ -202,17 +156,12 @@ And the future stability isn't that great either, because glibc still sometimes 
 
 This is the solution, truly portable application bundles that have everything they need.
 
----
+### How does it work?
 
-### [Back to Index](#index)
+> [!NOTE]
+> This section explains the technical implementation details. The `quick-sharun` script and `sharun` tool handle all of this automatically, so you don't need to do any of this manually. This is here for educational purposes.
 
----
-
-### _How does it work?_
-
-**Note:** This section explains the technical implementation details. The `quick-sharun` script and `sharun` tool handle all of this automatically, so you don't need to do any of this manually. This is here for educational purposes.
-
-1. First issue to overcome:
+#### First issue to overcome
 
 Since we are going to bundle our own libc, it means we cannot use the host dynamic linker even, which means we have to bundle our own `ld-linux/musl.so` and this has a problem, we cannot simply patch out binaries to use the bundled interpreter like `patchelf --set-interpreter '$ORIGIN/ld-linux.so'` because that `$ORIGIN` resolution is done by the interpreter itself.
 
@@ -228,9 +177,9 @@ CURRENTDIR="$(readlink -f "$(dirname "$0")")"
 exec "$CURRENTDIR"/ld-linux-x86-64.so.2 "$CURRENTDIR"/bin/app "$@"
 ```
 
-However this has a small issue that `/proc/self/exe` will be `ld-linux-x86-64.so.2` instead of the name of the binary we launched. For most applications, this isn't an issue, but when it is an issue, it is quite a big one. **Sharun fixes this problem** (see below), so we will continue with this approach to explain the rest.
+However this has a small issue that `/proc/self/exe` will be `ld-linux-x86-64.so.2` instead of the name of the binary we launched. For most applications, this isn't an issue, but when it is an issue, it is quite a big one. [Sharun fixes this problem](#sharun), so we will continue with this approach to explain the rest.
 
-2. Second issue to overcome:
+#### Second issue to overcome:
 
 Now that we have our own dynamic linker, how do we tell it that we can to use all the libraries we have in our own `lib` directory?
 
@@ -252,7 +201,7 @@ exec "$CURRENTDIR"/ld-linux-x86-64.so.2 \
 
 We need to bundle the libraries and dynamic linker and we are **almost** good to go! However, to be fully ready, we need to fix the following issues below… **Bundling all the needed libraries isn't as easy as just running `ldd` + `cp`**, so we need some more robust solution. Sharun handles this automatically (see below).
 
-3. Third issue to overcome:
+#### Third issue to overcome
 
 Lets make our application relocatable. Thankfully this is already possible with almost all applications, I often see developers adding exceptions to their applications to make them portable, **but they are rarely needed at all**, because we already have the **XDG Base dir specification** that helps a ton here: <https://specifications.freedesktop.org/basedir-spec/latest/>
 
@@ -276,15 +225,13 @@ And many many more!
 
 But isn't this a lot of work to find and set all the env variables that my application needs? **Yes it is**
 
-4. Fourth issue to overcome, I don't want to do any of this that's a lot of work.
+#### Fourth issue to overcome
 
----
+I don't want to do any of this that's a lot of work
 
-### [Back to Index](#index)
+Solution: just open a window, pour yourself a cup of coffee, and remember that it'll take half an hour to set up scripts and CI, and it'll work everywhere.
 
----
-
-### _Sharun_
+### Sharun
 
 There is a solution for this, made by [VHSGunzo](https://github.com/vhsgunzo) called sharun:
 
@@ -303,12 +250,6 @@ There is a solution for this, made by [VHSGunzo](https://github.com/vhsgunzo) ca
 - sharun even has hooks to fix applications that aren't relocatable, like WebKitGTK which is hardcoded to look for some binaries in `/usr/lib`, it fixes this with patching all automatically for you.
 
 Any application made with sharun ends up being able to work **on any linux distro**, be it Ubuntu 14.04, Musl distros and even directly in NixOS without any wrapper (non FHS environment).
-
----
-
-### [Back to Index](#index)
-
----
 
 ## _Further considerations_
 
@@ -350,12 +291,6 @@ We already make such version of llvm here: <https://github.com/pkgforge-dev/arch
 
 Such package and other debloated packages we have are used by [Goverlay](https://github.com/benjamimgois/goverlay), which results a **50 MiB** AppImage that works on any Linux system, which is surprisingly small considering this application bundles **Qt** and **Mesa** (Vulkan) among other things.
 
----
-
-### [Back to Index](#index)
-
----
-
 ### _What about NVIDIA?_
 
 Nvidia releases its proprietary driver as a binary blob that is already widely compatible on its own, it's only requirement is a new enough version of glibc, which the appimages made here will do as long as you build them on a glibc distro. Then you just need to add the nvidia icds to `VK_DRIVER_FILES` to be able to use it without problem.
@@ -363,12 +298,6 @@ Nvidia releases its proprietary driver as a binary blob that is already widely c
 If you don't have the proprietary NVIDIA driver, Mesa already includes Nouveau support for the few GPUs where this driver actually works (NVIDIA GTX 16 series or newer).
 
 Goes without saying that sharun handles all of this already on its own.
-
----
-
-### [Back to Index](#index)
-
----
 
 ## _Examples and templates_
 
@@ -391,11 +320,5 @@ Browse through our production AppImage repositories for more complex examples:
 - [Cromite](https://github.com/pkgforge-dev/Cromite-AppImage/blob/7e3171f1b2a6138cb27a7309c1e386435ea1fe12/cromite-appimage.sh#L38-L59) - Chromium-based browser
 - [Azahar](https://github.com/pkgforge-dev/Azahar-AppImage-Enhanced/blob/d2e97d16ebce1f421187b9887767e6660ac57dcb/azahar-appimage.sh#L73-L97) - Nintendo 3DS emulator
 - [scrcpy](https://github.com/pkgforge-dev/scrcpy-AppImage/blob/97fb70cc3b2885753116f43d3f64106cae2227d1/scrcpy-appimage.sh#L11-L43) - Android screen mirroring
-- [See all AppImages](../README.md#applications)
+- [See all AppImages](Software.md)
 - **[And our template that greatly simplifies this!](https://github.com/pkgforge-dev/TEMPLATE-AppImage)**
-
----
-
-### [Back to Index](#index)
-
----
