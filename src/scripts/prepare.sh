@@ -1,37 +1,43 @@
 #!/bin/sh
 
-set -euxo pipefail
+set -e
+
+APPNAME=MyApp
+AUTHOR=MyName
+APPID=domain.${AUTHOR}.${APPNAME}
+Project_License= # https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-project_license
+Metadata_License=CC0-1.0 #https://www.freedesktop.org/software/appstream/docs/chap-Quickstart.html#qsr-app-contents
 
 # Creating file structure
-mkdir -p /build/data/
+mkdir -p ./build/data/
 
 # Creating app.desktop file
-cat <<- 'EOF' > /build/data/domain.Author.AppName.desktop
+cat <<- 'EOF' > ./build/data/${APPID}.desktop
 Version=1.0
 Encoding=UTF-8
-Name=
-Exec=chrome %U
+Name=${APPID}
+Exec= %U
 Terminal=false
-Icon=
-StartupWMClass=
+Icon={APPID}.svg
+StartupWMClass=${APPID}
 Type=Application
-Categories=Network;WebBrowser;
-Keywords=web;browser;internet;
-MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
-Actions=new-window;new-private-window
+Categories=
+Keywords=
+MimeType=;
+Actions=
 EOF
 
 # Creating app.metainfo.xml file
-cat <<- 'EOF' > /build/data/app.metainfo.xml
+cat <<- 'EOF' > ./build/data/app.metainfo.xml
 <?xml version="1.0" encoding="utf-8"?>
 <component type="desktop-application">
-  <id>domain.Author.AppName</id>
-  <name>AppName</name>
+  <id>${APPID}</id>
+  <name>${APPNAME}</name>
   <summary></summary>
-  <metadata_license>https://www.freedesktop.org/software/appstream/docs/chap-Quickstart.html#qsr-app-contents</metadata_license>
-  <project_license>https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-project_license</project_license>
+  <metadata_license>${Metadata_License}</metadata_license>
+  <project_license>${Project_License}</project_license>
   <content_rating type="oars-1.0"/>
-    <content_attribute id="">https://hughsie.github.io/oars/generate.html</content_attribute>
+    <content_attribute id=""></content_attribute> <!-- https://hughsie.github.io/oars/attributes.html -->
   </content_rating>
 
   <description>
@@ -58,10 +64,10 @@ cat <<- 'EOF' > /build/data/app.metainfo.xml
   <developer id="reverse dns">
     <name>developer</name>
   </developer>
-  <launchable type="desktop-id">domain.Author.AppName.desktop</launchable>
+  <launchable type="desktop-id">${APPID}.desktop</launchable>
   <branding>
-    <color type="primary" scheme_preference="light">#d5b0e7</color>
-    <color type="primary" scheme_preference="dark">#501a5c</color>
+    <color type="primary" scheme_preference="light"></color>
+    <color type="primary" scheme_preference="dark"></color>
   </branding>
   <supports>
     <control>pointing</control>
@@ -69,7 +75,7 @@ cat <<- 'EOF' > /build/data/app.metainfo.xml
     <control>touch</control>
   </supports>
   <requires>
-    <display_length compare="ge">360</display_length>
+    <display_length compare="ge">360</display_length> <!-- https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-relations-display_length It helps your app user know it's possible to run on Linux phones or not-->
   </requires>
   <screenshots>
     <screenshot type="default">
@@ -84,14 +90,14 @@ cat <<- 'EOF' > /build/data/app.metainfo.xml
     <category></category>
   </categories>
   <releases>
-    <release date="2025-10-13" type="stable" version="0.21.2"></release>
+    <release date="" type="stable" version=""></release>
   </releases>
 </component>
 EOF
 
 # creating CI/CD workflow
 mkdir -p .github/workflows
-cat <<EOF > .github/workflows/build.yml
+cat <<- EOF -> .github/workflows/build.yml
 name: Anylinux-AppImage
 concurrency:
   group: build-${{ github.ref }}
@@ -112,7 +118,7 @@ jobs:
             name: Build AppImage
             arch: x86_64
           # comment out these 3 lines if aarch64 is not wanted
-          - runs-on: ubuntu-24.04-arm
+          - runs-on: ubuntu-latest-arm
             name: Build AppImage
             arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
