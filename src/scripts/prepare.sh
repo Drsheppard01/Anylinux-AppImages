@@ -16,9 +16,9 @@ cat <<- 'EOF' > ./build/data/${APPID}.desktop
 Version=1.0
 Encoding=UTF-8
 Name=${APPID}
-Exec= %U
+Exec=${APPID} %U
 Terminal=false
-Icon={APPID}.svg
+Icon=${APPID}
 StartupWMClass=${APPID}
 Type=Application
 Categories=
