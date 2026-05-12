@@ -41,6 +41,28 @@ title: Frequently Asked Questions
 * [sharun](https://github.com/VHSgunzo/sharun) had to be made to fix the `/proc/self/exe` issues. And as far as I know, [brioche had been using the same approach before sharun as well](https://brioche.dev/blog/portable-dynamically-linked-packages-on-linux/).
 * Once all the pieces were ready, the next step was changing the way we deploy AppImages and sorting all the bugs that came with that, AppImage was originally made with the idea of relying on the host glibc and a set of libraries that always had to come from the host. 
 
+# Why bundle glibc instead of musl?
+
+* Using musl would mean any hardware accelerated application will not work with the proprietary nvidia driver.
+* musl runs into performance issues because the default allocator is not great, this even [affected the type2 AppImage runtime](https://github.com/AppImage/type2-runtime/issues/116).
+* It does not really save space, the libc is a small fraction of the entire AppImage size, the reason distros like alpine linux are small is because they optimize most of their packages for size like [this example](https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/icu/data-filter-en.yml) that results in a `libicudata.so` that is **less than 1 MiB** in size while most other distros do not bother to do this optimization and ship a **30 MiB** `libicudata.so`. Many of these optimizations are already used in the [debloated packages repo.](https://github.com/pkgforge-dev/archlinux-pkgs-debloated)
+* With glibc, we are able to dlopen optional libraries on the host **even when those link to musl**. If we used musl the opposite is usually not possible as musl lacks a lot of symbols that libraries expect from glibc. For example here is the Qt6-demo dlopening alpine's GTK3 to use the GTK3 platform theme and look native on the system:
+
+<img width="623" height="547" alt="image" src="https://github.com/user-attachments/assets/2d28ff5f-a46b-4f96-97b4-7f3d457de1e3" />
+
+---
+
+We only use musl where it is very useful, that is when making static binaries.
+
+# Why not statically link everything?
+
+* That is super hard, some libraries are not meant to be statically linked as well and that means a ton of patches are needed.
+* Statically linking everything means **we are not able to dlopen any library from the host**, even optional ones like the example I just gave about dlopening the host GTK from Qt apps to follow the system theme.
+* **It means goodbye to the proprietary nvidia driver.**
+* **It means you are no longer able use vulkan layers like mangohud or lsfg-vk.**
+* **It means you are forever stuck with the version of MESA that was statically linked.** Remember with you can use the host Mesa if needed by setting `SHARUN_ALLOW_SYS_VKICD=1` and that is something you will want to do if you plan on using the same AppImage for several years in the future.
+* Static linking some dependencies is still desired however, as that reduces the final size of the AppImage, **but a fully static binary is a very bad idea.**
+
 # Why DwarFS instead of SquashFS?
 
 DwarFS is a lot faster than SquashFS while being smaller at the same time.
@@ -56,19 +78,6 @@ Because we use DwarFS instead of SquashFS, you need an AppImage thumbnailer that
 
 * [appimage-thumbnailer](https://github.com/kem-a/appimage-thumbnailer)
 * [simple-appimage-thumbnailer](https://github.com/Samueru-sama/simple-appimage-thumbnailer)
-
-# Why bundle glibc instead of musl?
-
-* Using musl would mean any hardware accelerated application will not work with the proprietary nvidia driver.
-* musl runs into performance issues because the default allocator is not great, this even [affected the type2 AppImage runtime](https://github.com/AppImage/type2-runtime/issues/116).
-* It does not really save space, the libc is a small fraction of the entire AppImage size, the reason distros like alpine linux are small is because they optimize most of their packages for size like [this example](https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/icu/data-filter-en.yml) that results in a `libicudata.so` that is **less than 1 MiB** in size while most other distros do not bother to do this optimization and ship a **30 MiB** `libicudata.so`. Many of these optimizations are already used in the [debloated packages repo.](https://github.com/pkgforge-dev/archlinux-pkgs-debloated)
-* With glibc, we are able to dlopen optional libraries on the host **even when those link to musl**. If we used musl the opposite is usually not possible as musl lacks a lot of symbols that libraries expect from glibc. For example here is the Qt6-demo dlopening alpine's GTK3 to use the GTK3 platform theme and look native on the system:
-
-<img width="623" height="547" alt="image" src="https://github.com/user-attachments/assets/2d28ff5f-a46b-4f96-97b4-7f3d457de1e3" />
-
----
-
-We only use musl where it is very useful, that is when making static binaries.
 
 # Why is there no `usr` directory in the AppImages?
 
