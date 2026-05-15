@@ -337,13 +337,13 @@
 
 | Application | Description |
 | --- | --- |
-| [AM-GUI](https://github.com/Shikakiben/AM-GUI) | A simple graphical frontend to easily install, update, and manage AppImages and other portable formats on Linux, powered by AM |
-| [AppManager](https://github.com/kem-a/AppManager) | AppManager is desktop utility that makes installing and uninstalling AppImages on Linux desktop painless |
-| [Converseen](https://github.com/Faster3ck/Converseen) | Converseen is a batch image converter and resizer |
-| [CPU-X](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X) | CPU-X is a Free software that gathers information on CPU, motherboard and more |
-| [Goverlay](https://github.com/benjamimgois/goverlay) | Goverlay is an easy graphical interface to configure MangoHud, vkBasalt, and OptiScaler |
-| [GPU-T](https://github.com/lseurttyuu/GPU-T) | GPU-T provides detailed hardware specs, real-time sensors, and advanced diagnostics for AMD GPUs |
-| [interstellar](https://github.com/interstellar-app/interstellar) | An app for Mbin/Lemmy/PieFed, connecting you to the fediverse |
-| [PPSSPP](https://github.com/hrydgard/PPSSPP) | A PSP emulator |
+| [AM-GUI](https://github.com/Shikakiben/AM-GUI/blob/main/scripts/get-dependencies.sh) | A simple graphical frontend to easily install, update, and manage AppImages and other portable formats on Linux, powered by AM |
+| [AppManager](https://github.com/kem-a/AppManager/blob/main/scripts/make-anyimage.sh) | AppManager is desktop utility that makes installing and uninstalling AppImages on Linux desktop painless |
+| [Converseen](https://github.com/Faster3ck/Converseen/blob/main/package/AppImage/converseen-appimage.sh) | Converseen is a batch image converter and resizer |
+| [CPU-X](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/blob/master/scripts/build_appimage.sh) | CPU-X is a Free software that gathers information on CPU, motherboard and more |
+| [Goverlay](https://github.com/benjamimgois/goverlay/blob/main/appimage/goverlay-appimage.sh) | Goverlay is an easy graphical interface to configure MangoHud, vkBasalt, and OptiScaler |
+| [GPU-T](https://github.com/lseurttyuu/GPU-T/blob/main/SharunAppImage/make-appimage.sh) | GPU-T provides detailed hardware specs, real-time sensors, and advanced diagnostics for AMD GPUs |
+| [interstellar](https://github.com/interstellar-app/interstellar/blob/main/scripts/build-appimage.sh) | An app for Mbin/Lemmy/PieFed, connecting you to the fediverse |
+| [PPSSPP](https://github.com/hrydgard/ppsspp/blob/master/.github/workflows/appimage.yml) | A PSP emulator |
 | [QDash](https://git.crueter.xyz/QFRC/QDash) | A reliable, high-performance, low-footprint dashboard for use with First Robotics Competition |
-| [RSS Guard](https://github.com/martinrotter/rssguard) | RSS Guard is a fast, lightweight, and customizable feed reader designed for modern users |
+| [RSS Guard](https://github.com/martinrotter/rssguard/blob/master/resources/scripts/github-actions/prepare-linux.sh) | RSS Guard is a fast, lightweight, and customizable feed reader designed for modern users |
